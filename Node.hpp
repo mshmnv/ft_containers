@@ -10,6 +10,7 @@ public:
 	Node	*next;
 	Node	*prev;
 	Node();
+	Node(Node const &);
 	Node(Type const &);
 	~Node();
 
@@ -20,6 +21,12 @@ public:
 
 template <class Type>
 Node<Type>::Node() : _data(0), next(NULL), prev(NULL) {}
+
+template <class Type>
+Node<Type>::Node(Node const &other) {
+	*this = other;
+}
+
 
 template <class Type>
 Node<Type>::Node(Type const &data) : _data(data), next(NULL), prev(NULL) {}
