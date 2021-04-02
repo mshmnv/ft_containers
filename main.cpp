@@ -112,14 +112,20 @@ int main() {
 	for (it = stdList3.begin(); it != ite; it++)
 		std::cout << *it << " ";
 	std::cout << std::endl << "FT:  ";
-
 	ft::list<int>::iterator ft_ite;
 	ft::list<int>::iterator ft_it;
 	ft_ite = list3.end();
 	for (ft_it = list3.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
-	std::cout << std::endl;
+	std::cout << std::endl << std::endl;;
 
+	// std::cout << "STD: ";
+	// std::list<int>::const_iterator c_ite;
+	// std::list<int>::const_iterator c_it;
+	// c_ite = stdList3.end();
+	// for (c_it = stdList3.begin(); c_it != c_ite; c_it++)
+	// 	std::cout << *c_it << " ";
+	// std::cout << std::endl << "FT:  ";
 	// ft::list<int>::const_iterator ft_c_ite;
 	// ft::list<int>::const_iterator ft_c_it;
 	// ft_c_ite = list3.end();
@@ -127,6 +133,13 @@ int main() {
 	// 	std::cout << *ft_c_it << " ";
 	// std::cout << std::endl;
 	
+	std::cout << "STD: ";
+	std::list<int>::reverse_iterator r_ite;
+	std::list<int>::reverse_iterator r_it;
+	r_ite = stdList3.rend();
+	for (r_it = stdList3.rbegin(); r_it != r_ite; r_it++)
+		std::cout << *r_it << " ";
+	std::cout << std::endl << "FT:  ";
 	ft::list<int>::reverse_iterator ft_r_ite;
 	ft::list<int>::reverse_iterator ft_r_it;
 	ft_r_ite = list3.rend();
@@ -134,12 +147,93 @@ int main() {
 		std::cout << *ft_r_it << " ";
 	std::cout << std::endl;
 
-	ft::list<int>::const_reverse_iterator ft_cr_ite;
-	ft::list<int>::const_reverse_iterator ft_cr_it;
-	ft_cr_ite = list3.rend();
-	for (ft_cr_it = list3.rbegin(); ft_cr_it != ft_cr_ite; ft_cr_it++)
-		std::cout << *ft_cr_it << " ";
-	std::cout << std::endl;	
+	// std::cout << "STD: ";
+	// std::list<int>::const_reverse_iterator cr_ite;
+	// std::list<int>::const_reverse_iterator cr_it;
+	// cr_ite = stdList3.rend();
+	// for (cr_it = stdList3.rbegin(); cr_it != cr_ite; cr_it++)
+	// 	std::cout << *cr_it << " ";
+	// std::cout << std::endl << "FT:  ";
+	// ft::list<int>::const_reverse_iterator ft_cr_ite;
+	// ft::list<int>::const_reverse_iterator ft_cr_it;
+	// ft_cr_ite = list3.rend();
+	// for (ft_cr_it = list3.rbegin(); ft_cr_it != ft_cr_ite; ft_cr_it++)
+	// 	std::cout << *ft_cr_it << " ";
+	std::cout << std::endl;
+
+	std::list<int> stdList4;
+	stdList4.insert(stdList4.begin(), 4);
+	stdList4.insert(stdList4.begin(), 3);
+	stdList4.insert(stdList4.begin(), 1);
+	stdList4.insert(stdList4.end(), 5);
+	ite = stdList4.begin();
+	ite++;
+	stdList4.insert(ite, 2);
+	std::cout << "STD: ";
+	ite = stdList4.end();
+	for (it = stdList4.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << std::endl << "FT:  ";
+	ft::list<int> list4;
+	list4.insert(list4.begin(), 4);
+	list4.insert(list4.begin(), 3);
+	list4.insert(list4.begin(), 1);
+	list4.insert(list4.end(), 5);
+	ft_ite = list4.begin();
+	ft_ite++;
+	list4.insert(ft_ite, 2);
+	ft_ite = list4.end();
+	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl << std::endl;
+
+	ite = stdList4.begin();
+	ite++;
+	ite++;
+	stdList4.insert(ite, 10, 9);
+	std::cout << "STD: ";
+	ite = stdList4.end();
+	for (it = stdList4.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << std::endl << "FT:  ";
+	ft_ite = list4.begin();
+	ft_ite++;
+	ft_ite++;
+	list4.insert(ft_ite, 10, 9);
+	ft_ite = list4.end();
+	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
+
+
+	// ite = stdList4.begin();
+	// stdList4.insert(ite, 10, 9);
+	// std::cout << "STD: ";
+	// ite = stdList4.end();
+	// for (it = stdList4.begin(); it != ite; it++)
+	// 	std::cout << *it << " ";
+	// std::cout << std::endl << "FT:  ";
+	// ft_ite = list4.begin();
+	// list4.insert(ft_ite, 10, 9);
+	// ft_ite = list4.end();
+	// for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
+	// 	std::cout << *ft_it << " ";
+	// std::cout << std::endl;
+
+
+	// ite = stdList4.end();
+	// stdList4.insert(ite, 10, 9);
+	// std::cout << "STD: ";
+	// ite = stdList4.end();
+	// for (it = stdList4.begin(); it != ite; it++)
+	// 	std::cout << *it << " ";
+	// std::cout << std::endl << "FT:  ";
+	// ft_ite = list4.end();
+	// list4.insert(ft_ite, 10, 9);
+	// ft_ite = list4.end();
+	// for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
+	// 	std::cout << *ft_it << " ";
+	// std::cout << std::endl;
 
 	return 0;
 }
