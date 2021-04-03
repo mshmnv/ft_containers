@@ -20,13 +20,12 @@ public:
 };
 
 template <class Type>
-Node<Type>::Node() : _data(0), next(NULL), prev(NULL) {}
+Node<Type>::Node() : _data(), next(NULL), prev(NULL) {}
 
 template <class Type>
 Node<Type>::Node(Node const &other) {
 	*this = other;
 }
-
 
 template <class Type>
 Node<Type>::Node(Type const &data) : _data(data), next(NULL), prev(NULL) {}
@@ -46,10 +45,8 @@ void	Node<Type>::setData(Type const &data) {
 
 template <class Type>
 Node<Type>	&Node<Type>::operator=(Node const &node) {
-	if (&this != node) {
-		this->_data = node.data;
-		this->next = node.next;
-	}
+	this->_data = node._data;
+	this->next = node.next;
 	return *this;
 }
 
