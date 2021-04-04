@@ -13,6 +13,12 @@ namespace ft {
 			Node<Type>* _empty;
 			size_t		_size;
 
+			template <bool B, class T = void>
+			struct enable_if {};
+			
+			template <class T>
+			struct enable_if <true, T> { typedef T type; };
+
 		public:
 			list();
 			list(list const &);
@@ -36,6 +42,7 @@ namespace ft {
 				iterator& operator++() { this->_curNode = this->_curNode->next; return *this; }
 				iterator& operator++(int) {++(*this); return *this;}
 				bool operator!=(iterator const &it) { return this->_curNode != it._curNode; }
+				bool operator==(iterator const &it) { return this->_curNode == it._curNode; }
 				int operator*() { return this->_curNode->getData(); }
 			};
 
@@ -89,7 +96,8 @@ namespace ft {
 		
 			void assign(size_t, Type const&);
 			// template <class InputIterator>
-			// 	void assign(InputIterator, InputIterator); // - after iterators
+			// 	void assign(InputIterator, InputIterator,
+			//	typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0); // - after iterators
 
 			void push_front (Type const&);
 			void pop_front();
@@ -98,8 +106,9 @@ namespace ft {
 
 			iterator insert(iterator, Type const&);
     		void insert(iterator, size_t, Type const&);
-			// template <class InputIterator>
-    		// 	void insert(iterator position, InputIterator first, InputIterator last); // previous insert goes here
+			template <class InputIterator>
+    			void insert(iterator, InputIterator, InputIterator,
+				typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
 
 			// iterator erase(iterator);
 			// iterator erase(iterator, iterator);
@@ -281,21 +290,22 @@ void ft::list<Type>::pop_back() {
 
 template <class Type>
 typename ft::list<Type>::iterator	ft::list<Type>::insert(iterator position, Type const& data) {
+	iterator it = this->begin();
+	iterator ite = this->end();
 	Node<Type> *tmp = this->_head;
 	Node<Type> *newNode = new Node<Type>(data);
 	Node<Type> *nextNode;
 
-	for (int i = 0; i < this->_size; i++) {
-		if (tmp->getData() == *position) {
-			this->_size++;
-			if (i == 0)
+	for (; it != ite; it++) {
+		if (it == position) {
+			if (this->begin() == position)
 				this->_head = newNode;
 			nextNode = tmp->next;
 			tmp->prev->next = newNode;
 			newNode->prev = tmp->prev;
 			tmp->prev = newNode;
 			newNode->next = tmp;
-			return position;
+			return iterator(newNode);
 		}
 		tmp = tmp->next;
 	}
@@ -306,14 +316,17 @@ typename ft::list<Type>::iterator	ft::list<Type>::insert(iterator position, Type
 
 template <class Type>
 void	ft::list<Type>::insert(iterator position, size_t n, Type const& data) {
+	iterator it = this->begin();
+	iterator ite = this->end();
+
 	Node<Type> *tmp = this->_head;
 
-	for (int i = 0; i < this->_size; i++) {
-		if (tmp->getData() == *position) {
+	for (; it != ite; it++) {
+		if (it == position) {
 			this->_size += n;
 			for (int j = 0; j < n; j++) {
 				Node<Type> *newNode = new Node<Type>(data);
-				if (i == 0 && j == 0)
+				if (this->begin() == position && j == 0)
 					this->_head = newNode;
 				tmp->prev->next = newNode;
 				newNode->prev = tmp->prev->next;
@@ -329,11 +342,16 @@ void	ft::list<Type>::insert(iterator position, size_t n, Type const& data) {
 		push_back(data);
 }
 
-// template <class Type>
-// template <class InputIterator>
-// void	ft::list<Type>::insert(iterator position, InputIterator first, InputIterator last) {
-
-// }
+template <class Type>
+template <class InputIterator>
+void	ft::list<Type>::insert(iterator position, InputIterator first, InputIterator last,
+typename ft::list<Type>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
+	while (first != last) {
+		// std::cout << *first << " ";
+		insert(position, *first);
+		first++;
+	}
+}
 
 // template <class Type>
 // typename ft::list<Type>::iterator ft::list<Type>::erase(iterator position) {
