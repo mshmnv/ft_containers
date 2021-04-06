@@ -40,7 +40,9 @@ namespace ft {
 				iterator(iterator  const &other) { this->_curNode = other._curNode; }
 				Type& getData() const { return _curNode->getData(); }
 				iterator& operator++() { this->_curNode = this->_curNode->next; return *this; }
+				iterator& operator--() { this->_curNode = this->_curNode->prev; return *this; }
 				iterator& operator++(int) {++(*this); return *this;}
+				iterator& operator--(int) {--(*this); return *this;}
 				bool operator!=(iterator const &it) { return this->_curNode != it._curNode; }
 				bool operator==(iterator const &it) { return this->_curNode == it._curNode; }
 				int operator*() { return this->_curNode->getData(); }
@@ -64,7 +66,9 @@ namespace ft {
 				reverse_iterator(reverse_iterator const &other) { this->_curNode = other._curNode; }
 				Type& getData() const { return _curNode->getData(); }
 				reverse_iterator& operator++() { this->_curNode = this->_curNode->prev; return *this; }
-				reverse_iterator& operator++(int) {++(*this); return *this;}
+				reverse_iterator& operator--() { this->_curNode = this->_curNode->next; return *this; }
+				reverse_iterator& operator++(int) { ++(*this); return *this; }
+				reverse_iterator& operator--(int) { --(*this); return *this; }
 				bool operator!=(reverse_iterator const &it) { return this->_curNode != it._curNode; }
 				int operator*() { return this->_curNode->getData(); }
 			};
@@ -95,24 +99,18 @@ namespace ft {
 			Type const& front() const;
 		
 			void assign(size_t, Type const&);
-			// template <class InputIterator>
-			// 	void assign(InputIterator, InputIterator,
-			//	typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0); // - after iterators
-
+			template <class InputIterator>
+				void assign(InputIterator, InputIterator, typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
 			void push_front (Type const&);
 			void pop_front();
 			void push_back(Type const&);
 			void pop_back();
-
 			iterator insert(iterator, Type const&);
     		void insert(iterator, size_t, Type const&);
 			template <class InputIterator>
-    			void insert(iterator, InputIterator, InputIterator,
-				typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
-
-			// iterator erase(iterator);
-			// iterator erase(iterator, iterator);
-
+    			void insert(iterator, InputIterator, InputIterator, typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
+			iterator erase(iterator);
+			iterator erase(iterator, iterator);
 			void swap(list&);
 			void resize(size_t, Type);
 			void clear();
@@ -232,14 +230,18 @@ void ft::list<Type>::assign(size_t count, Type const& value) {
 	}
 }
 
-// template <class Type>
-// template <class InputIterator>
-// void ft::list<Type>::assign(InputIterator first, InputIterator last) {
-
-// 	while (first != last) {
-
-// 	}
-// }
+template <class Type>
+template <class InputIterator>
+void ft::list<Type>::assign(InputIterator first, InputIterator last, typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
+	this->clear();
+	this->_empty = new Node<Type>;
+	this->_head = this->_empty;
+	this->_tail = this->_empty;
+	while (first != last) {
+		push_back(*first);
+		first++;
+	}
+}
 
 template <class Type>
 void ft::list<Type>::push_front(Type const &data) {
@@ -293,14 +295,13 @@ typename ft::list<Type>::iterator	ft::list<Type>::insert(iterator position, Type
 	iterator it = this->begin();
 	iterator ite = this->end();
 	Node<Type> *tmp = this->_head;
-	Node<Type> *newNode = new Node<Type>(data);
-	Node<Type> *nextNode;
 
 	for (; it != ite; it++) {
 		if (it == position) {
+		this->_size++;
+		Node<Type> *newNode = new Node<Type>(data);
 			if (this->begin() == position)
 				this->_head = newNode;
-			nextNode = tmp->next;
 			tmp->prev->next = newNode;
 			newNode->prev = tmp->prev;
 			tmp->prev = newNode;
@@ -309,7 +310,6 @@ typename ft::list<Type>::iterator	ft::list<Type>::insert(iterator position, Type
 		}
 		tmp = tmp->next;
 	}
-	delete newNode;
 	push_back(data);
 	return iterator(this->_tail);
 }
@@ -318,7 +318,6 @@ template <class Type>
 void	ft::list<Type>::insert(iterator position, size_t n, Type const& data) {
 	iterator it = this->begin();
 	iterator ite = this->end();
-
 	Node<Type> *tmp = this->_head;
 
 	for (; it != ite; it++) {
@@ -329,12 +328,11 @@ void	ft::list<Type>::insert(iterator position, size_t n, Type const& data) {
 				if (this->begin() == position && j == 0)
 					this->_head = newNode;
 				tmp->prev->next = newNode;
-				newNode->prev = tmp->prev->next;
+				newNode->prev = tmp->prev;
 				newNode->next = tmp;
 				tmp->prev = newNode;
 			}
 			return ;
-
 		}
 		tmp = tmp->next;
 	}
@@ -347,21 +345,45 @@ template <class InputIterator>
 void	ft::list<Type>::insert(iterator position, InputIterator first, InputIterator last,
 typename ft::list<Type>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
 	while (first != last) {
-		// std::cout << *first << " ";
 		insert(position, *first);
 		first++;
 	}
 }
 
-// template <class Type>
-// typename ft::list<Type>::iterator ft::list<Type>::erase(iterator position) {
+template <class Type>
+typename ft::list<Type>::iterator ft::list<Type>::erase(iterator position) {
+	Node<Type> *tmp = this->_head;
+	Node<Type> *nextTmp;
 
-// }
+	iterator ite = this->end();
+	for (iterator it = this->begin(); it != ite; it++) {
+		if (it == position) {
+			this->_size--;
+			nextTmp = tmp->next;
+			tmp->prev->next = nextTmp;
+			nextTmp->prev = tmp->prev;
 
-// template <class Type>
-// typename ft::list<Type>::iterator ft::list<Type>::erase(iterator first, iterator last) {
+			if (tmp == this->_head)
+				this->_head = nextTmp;
+			if (tmp == this->_tail)
+				this->_tail = nextTmp->prev;
+			delete tmp;
+			return iterator(nextTmp);
+		}
+		tmp = tmp->next;
+	}
+	return iterator(this->_empty);
+}
 
-// }
+template <class Type>
+typename ft::list<Type>::iterator ft::list<Type>::erase(iterator first, iterator last) {
+	iterator ret;
+	while (first != last) {
+		ret = erase(first);
+		first++;
+	}
+	return ret;
+}
 
 template <class Type>
 void ft::list<Type>::swap(list& x) {
@@ -403,32 +425,71 @@ void ft::list<Type>::resize(size_t n, Type data) {
 
 template <class Type>
 void ft::list<Type>::clear() {
-	this->_size = 0;
-	Node<Type>* tmp;
-	for (int i = 0; i < this->_size; i++) {
-		tmp = this->_head;
-		this->_head = this->_head->next;
-		delete tmp;
+	if (this->_size != 0) {
+		this->_size = 0;
+		Node<Type>* tmp;
+		for (int i = 0; i < this->_size; i++) {
+			tmp = this->_head;
+			this->_head = this->_head->next;
+			delete tmp;
+		}
+		this->_empty = new Node<Type>;
+		this->_head = this->_empty;
+		this->_tail = this->_empty;
+		this->_head->next = this->_empty;
+		this->_head->prev = this->_empty;
+		this->_tail->prev = this->_empty;
+		this->_tail->next = this->_empty;
 	}
-	this->_empty = new Node<Type>;
-	this->_head = this->_empty;
-	this->_tail = this->_empty;
 }
 
 
 template <class Type>
 void ft::list<Type>::splice(iterator position, list& x) {
-
+	iterator ite = this->end();
+	for (iterator it = this->begin(); it != ite; it++) {
+		if (it == position) {
+			iterator xIte = x.end();
+			for (iterator xIt = x.begin(); xIt != xIte; xIt++)
+				insert(position, *xIt);
+			x.clear();
+			return ;
+		}
+	}
+	iterator xIte = x.end();
+	for (iterator xIt = x.begin(); xIt != xIte; xIt++)
+		insert(this->end(), *xIt);
+	x.clear();
 }
+
 template <class Type>
 void ft::list<Type>::splice(iterator position, list& x, iterator i) {
-
+	iterator ite = this->end();
+	for (iterator it = this->begin(); it != ite; it++) {
+		if (it == position) {
+			iterator xIte = x.end();
+			for (iterator xIt = x.begin(); xIt != xIte; xIt++) {
+				if (xIt == i) {
+					insert(position, *i);
+					x.erase(i);
+				}
+			}
+			return ;
+		}
+	}
+	iterator xIte = x.end();
+	for (iterator xIt = x.begin(); xIt != xIte; xIt++) {
+		if (xIt == i) {
+			insert(this->end(), *i);
+			x.erase(i);
+		}
+	}
 }
+
 template <class Type>
 void ft::list<Type>::splice(iterator position, list& x, iterator first, iterator last) {
 
 }
-
 
 
 
