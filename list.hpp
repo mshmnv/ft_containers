@@ -34,6 +34,8 @@ namespace ft {
 			class	iterator {
 			protected:
 				Node<Type>* _curNode;
+				template <class T>
+				friend class list;
 			public:
 				iterator() : _curNode(NULL) {}
 				iterator(Node<Type> *other) : _curNode(other) {}
@@ -177,11 +179,6 @@ ft::list<Type>::~list() {
 /*
 **		METHODS
 */
-
-template <class Type>
-Node<Type>* ft::list<Type>::getNode() const {
-	return this->_head;
-}
 
 template <class Type>
 bool ft::list<Type>::empty() const {
@@ -446,53 +443,77 @@ void ft::list<Type>::clear() {
 
 template <class Type>
 void ft::list<Type>::splice(iterator position, list& x) {
-	iterator ite = this->end();
-	for (iterator it = this->begin(); it != ite; it++) {
-		if (it == position) {
-			iterator xIte = x.end();
-			for (iterator xIt = x.begin(); xIt != xIte; xIt++)
-				insert(position, *xIt);
-			x.clear();
-			return ;
-		}
-	}
-	iterator xIte = x.end();
-	for (iterator xIt = x.begin(); xIt != xIte; xIt++)
-		insert(this->end(), *xIt);
-	x.clear();
+	this->_size += x._size;
+	x._size = 0;
+	
+	if (position == this->begin())
+		this->_head = x._head;
+	if (position == this->end())
+		this->_tail = x._tail;
+	x._head->prev = position._curNode->prev;
+	position._curNode->prev->next = x._head;
+	x._tail->next = position._curNode;
+	position._curNode->prev = x._tail;
+	x._head = x._empty;
+	x._tail = x._empty;
+	x._head->next = x._empty;
+	x._head->prev = x._empty;
+	x._tail->next = x._empty;
+	x._tail->prev = x._empty;	
 }
 
 template <class Type>
 void ft::list<Type>::splice(iterator position, list& x, iterator i) {
-	iterator ite = this->end();
-	for (iterator it = this->begin(); it != ite; it++) {
-		if (it == position) {
-			iterator xIte = x.end();
-			for (iterator xIt = x.begin(); xIt != xIte; xIt++) {
-				if (xIt == i) {
-					insert(position, *i);
-					x.erase(i);
-				}
-			}
-			return ;
-		}
-	}
-	iterator xIte = x.end();
-	for (iterator xIt = x.begin(); xIt != xIte; xIt++) {
-		if (xIt == i) {
-			insert(this->end(), *i);
-			x.erase(i);
-		}
-	}
+	this->_size++;
+	x._size--;
+	if (position == this->begin())
+		this->_head = i._curNode;
+	if (position == this->end())
+			this->_tail = i._curNode;
+	if (i == --x.end())
+		x._tail = i._curNode->prev;
+	if (i == x._head)
+		x._head = i._curNode->next;
+
+	i._curNode->prev->next = i._curNode->next;
+	i._curNode->next->prev = i._curNode->prev;
+
+	i._curNode->prev = position._curNode->prev;
+	position._curNode->prev->next = i._curNode;
+	i._curNode->next = position._curNode;
+	position._curNode->prev = i._curNode;
 }
 
 template <class Type>
 void ft::list<Type>::splice(iterator position, list& x, iterator first, iterator last) {
-
+	if (first == last)
+		return ;
+	int len = 0;
+	for (iterator tmpFirst = first; tmpFirst != last; tmpFirst++)
+		len++;
+	if (position == this->begin())
+		this->_head = first._curNode;
+	if (position == this->end())
+		this->_tail = last._curNode->prev;
+	if (last == x.end())
+		x._tail = first._curNode->prev;
+	if (first == x._head)
+		x._head = last._curNode;
+	Node<Type> *prevNode = last._curNode->prev;
+	first._curNode->prev->next = last._curNode;
+	last._curNode->prev = first._curNode->prev;
+	
+	position._curNode->prev->next = first._curNode;
+	first._curNode->prev = position._curNode->prev;
+	position._curNode->prev = prevNode;
+	prevNode->next = position._curNode;
+	
+	if (len > x._size)
+		x._size = 0;
+	else
+		x._size -= len;
+	this->_size += len;
 }
-
-
-
 /*
 **		OVERLOADS
 */
@@ -506,6 +527,8 @@ ft::list<Type>& ft::list<Type>::operator=(list const& list) {
 	return *this;
 }
 
+// DELETE
+
 template <class Type>
 std::ostream& operator<<(std::ostream& out, ft::list<Type> const& list) {
 	Node<Type>* tmp = list.getNode();
@@ -515,6 +538,11 @@ std::ostream& operator<<(std::ostream& out, ft::list<Type> const& list) {
 	}
 	out << std::endl;
 	return out;
+}
+
+template <class Type>
+Node<Type>* ft::list<Type>::getNode() const {
+	return this->_head;
 }
 
 #endif

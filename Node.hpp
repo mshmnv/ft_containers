@@ -1,5 +1,7 @@
 #ifndef NODE_HPP
 #define NODE_HPP
+#include "list.hpp"
+
 
 template <class Type>
 class Node {

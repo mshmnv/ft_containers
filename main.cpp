@@ -263,6 +263,24 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl << std::endl;
 
+	std::list<int> n;
+	for (int i = 0; i < 10; i++)
+		n.push_back(i);
+	n.insert(n.begin(), n.begin(), n.end());
+	std::cout << std::endl << "STD: ";
+	ite = n.end();
+	for (it = n.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << std::endl << "FT:  ";
+
+	ft::list<int> m;
+	for (int i = 0; i < 10; i++)
+		m.push_back(i);
+	m.insert(m.begin(), m.begin(), m.end());
+	ft_ite = m.end();
+	for (ft_it = m.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
 
 	// ite = stdList4.begin();
 	// stdList4.insert(ite, 10, 9);
@@ -307,7 +325,6 @@ int main() {
 	stdList4.insert(it, newStdList.begin(), newStdList.end());
 	// stdList4.insert(stdList4.end(), newStdList.begin(), newStdList.end());
 
-
 	for (it = stdList4.begin(); it != ite; it++)
 		std::cout << *it << " ";
 	std::cout << std::endl << "FT:  ";
@@ -321,7 +338,6 @@ int main() {
 	ft_ite = list4.end();
 	list4.insert(ft_it, newList.begin(), newList.end());
 	// list4.insert(list4.end(), newList.begin(), newList.end());
-
 
 	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
@@ -479,6 +495,8 @@ int main() {
 	it++;
 	stdList4.splice(it, stdSecond);
 	// stdList4.splice(stdList4.end(), stdSecond);
+	// stdList4.splice(--stdList4.end(), stdSecond);
+	// stdList4.splice(stdList4.begin(), stdSecond);
 
 	ite = stdList4.end();
 	for (it = stdList4.begin(); it != ite; it++)
@@ -510,7 +528,8 @@ int main() {
 	ft_it++;
 	list4.splice(ft_it, ftSecond);
 	// list4.splice(list4.end(), ftSecond);
-
+	// list4.splice(--list4.end(), ftSecond);
+	// list4.splice(list4.begin(), ftSecond);
 	ft_ite = list4.end();
 	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
@@ -529,6 +548,7 @@ int main() {
 	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
+
 
 	std::list<int> stdNew1;
 	for (int i = 0; i < 5; i++)
@@ -550,15 +570,49 @@ int main() {
 	std::cout << std::endl;
 
 
-
-
 	std::list<int>	stdFirst;
 	for (int i = 10; i < 20; i++)
 		stdFirst.push_back(i);
 	ite = stdFirst.end(); ite--; ite--;
 	stdSecond.splice(stdSecond.begin(), stdFirst, ite);
-	stdSecond.splice(++stdSecond.begin(), stdFirst, --ite);
-	// stdSecond.splice(stdSecond.end(), stdFirst, --ite);
+	ite = --stdFirst.end();
+	stdSecond.splice(++stdSecond.begin(), stdFirst, ite);
+	ite = stdFirst.begin();
+	stdSecond.splice(stdSecond.end(), stdFirst, ite);
+	stdSecond.splice(stdSecond.end(), stdFirst, --ite);
+	std::cout << "STD: ";
+	ite = stdFirst.end();
+	for (it = stdFirst.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << "| ";
+	ite = stdSecond.end();
+	for (it = stdSecond.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << std::endl << "FT:  ";
+	ft::list<int>	ftFirst;
+	for (int i = 10; i < 20; i++)
+		ftFirst.push_back(i);
+	ft_ite = ftFirst.end(); ft_ite--; ft_ite--;
+	ftSecond.splice(ftSecond.begin(), ftFirst, ft_ite);
+	ft_ite = --ftFirst.end();
+	ftSecond.splice(++ftSecond.begin(), ftFirst, ft_ite);
+	ft_ite = ftFirst.begin();
+	ftSecond.splice(ftSecond.end(), ftFirst, ft_ite);
+	ftSecond.splice(ftSecond.end(), ftFirst, --ft_ite);
+	ft_ite = ftFirst.end();
+	for (ft_it = ftFirst.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << "| ";
+	ft_ite = ftSecond.end();
+	for (ft_it = ftSecond.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
+
+	stdSecond.splice(++stdSecond.begin(), stdFirst, ++stdFirst.begin(), --stdFirst.end());
+	// stdSecond.splice(++stdSecond.begin(), stdFirst, stdFirst.begin(), stdFirst.end());
+	// stdSecond.splice(--stdSecond.end(), stdFirst, ++stdFirst.begin(), --stdFirst.end());
+	// stdSecond.splice(stdSecond.end(), stdFirst, ++stdFirst.begin(), --stdFirst.end());
+	// stdSecond.splice(stdSecond.end(), stdFirst, stdFirst.begin(), stdFirst.end());
 	std::cout << "STD: ";
 	ite = stdFirst.end();
 	for (it = stdFirst.begin(); it != ite; it++)
@@ -569,13 +623,10 @@ int main() {
 		std::cout << *it << " ";
 	std::cout << std::endl << "FT:  ";
 
-	ft::list<int>	ftFirst;
-	for (int i = 10; i < 20; i++)
-		ftFirst.push_back(i);
-	ft_ite = ftFirst.end(); ft_ite--; ft_ite--;
-	ftSecond.splice(ftSecond.begin(), ftFirst, ft_ite);
-	ftSecond.splice(++ftSecond.begin(), ftFirst, --ft_ite);
-	// ftSecond.splice(ftSecond.end(), ftFirst, --ft_ite);
+	ftSecond.splice(++ftSecond.begin(), ftFirst, ++ftFirst.begin(), --ftFirst.end());
+	// ftSecond.splice(++ftSecond.begin(), ftFirst, ftFirst.begin(), ftFirst.end());
+	// ftSecond.splice(--ftSecond.end(), ftFirst, ++ftFirst.begin(), --ftFirst.end());
+	// ftSecond.splice(ftSecond.end(), ftFirst, ++ftFirst.begin(), --ftFirst.end());
 	ft_ite = ftFirst.end();
 	for (ft_it = ftFirst.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
@@ -584,5 +635,6 @@ int main() {
 	for (ft_it = ftSecond.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
+
 	return 0;
 }
