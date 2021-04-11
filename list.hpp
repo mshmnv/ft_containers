@@ -4,6 +4,10 @@
 #include <iostream>
 #include "Node.hpp"
 
+// CHANGE W/O LOOP
+// erase(iterator position)
+// insert
+
 namespace ft {
 	template <class Type>
 	class list {
@@ -14,22 +18,37 @@ namespace ft {
 			size_t		_size;
 
 			template <bool B, class T = void>
-			struct enable_if {};
-			
+				struct enable_if {};
 			template <class T>
-			struct enable_if <true, T> { typedef T type; };
-
+				struct enable_if <true, T> { typedef T type; };
 		public:
-			list();
-			list(list const &);
-			list(int, Type);	// ? Allocator()
+			explicit list();
+// todo w/ allocator
+			// explicit list(int, const Type& val = value_type(),const allocator_type& alloc = allocator_type());
+			explicit list(int, const Type&);
+// todo w/ allocator
+			template <class InputIterator>
+				list (InputIterator first, InputIterator last, /* const allocator_type& alloc = allocator_type(), */
+					typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
+			explicit list(list const &);
 			~list();
 	
 			Node<Type>* getNode() const;
-			list &operator=(list const &list);
+			list &operator=(list const &);
+
+			/*
+			**		ALLOCATORS
+			*/
+
+			class Allocator {
+			private:
+			public:
+			};
+
 			/*
 			**		ITERATORS
 			*/
+
 			class	const_iterator;
 			class	iterator {
 			protected:
@@ -43,8 +62,8 @@ namespace ft {
 				Type& getData() const { return _curNode->getData(); }
 				iterator& operator++() { this->_curNode = this->_curNode->next; return *this; }
 				iterator& operator--() { this->_curNode = this->_curNode->prev; return *this; }
-				iterator& operator++(int) {++(*this); return *this;}
-				iterator& operator--(int) {--(*this); return *this;}
+				iterator& operator++(int) { ++(*this); return *this; }
+				iterator& operator--(int) { --(*this); return *this; }
 				bool operator!=(iterator const &it) { return this->_curNode != it._curNode; }
 				bool operator==(iterator const &it) { return this->_curNode == it._curNode; }
 				int operator*() { return this->_curNode->getData(); }
@@ -121,15 +140,26 @@ namespace ft {
 			void splice(iterator, list&, iterator);
 			void splice(iterator, list&, iterator, iterator);
 
-			// remove();
-			// remove_if();
-			// unique();
-			// merge();
-			// sort();
-			// reverse();
-			// get_allocator(); // ?????
-
-
+//todo
+			void remove(const Type& val);
+			template <class Predicate>
+				void remove_if(Predicate pred);
+			
+			void unique();
+			template <class BinaryPredicate>
+				void unique(BinaryPredicate binary_pred);
+			
+			void merge (list& x);
+			template <class Compare>
+				void merge(list& x, Compare comp);
+			
+			void sort();
+			template <class Compare>
+				void sort(Compare comp);
+			
+			void reverse();
+		
+			// allocator_type get_allocator() const;
 	};
 }
 
@@ -149,18 +179,37 @@ ft::list<Type>::list() : _size(0){
 }
 
 template <class Type>
-ft::list<Type>::list(int count, Type data) : _size(0) {
+ft::list<Type>::list(int count, const Type& data) : _size(0) {
 	this->_empty = new Node<Type>;
 	this->_head = this->_empty;
 	this->_tail = this->_empty;
 	for (int i = 0; i < count; i++)
-		push_back(data);
+		this->push_back(data);
+}
+
+template <class Type>
+template <class InputIterator>
+ft::list<Type>::list (InputIterator first, InputIterator last, /* const allocator_type& alloc = allocator_type(), */
+	typename ft::list<Type>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
+	this->_size = 0;
+	this->_empty = new Node<Type>;
+	this->_head = this->_empty;
+	this->_tail = this->_empty;
+	this->_head->next = this->_empty;
+	this->_head->prev = this->_empty;
+	this->_tail->prev = this->_empty;
+	this->_tail->next = this->_empty;
+	for (; first != last; first++) {
+		this->push_back(*first);
+	}
 }
 
 template <class Type>
 ft::list<Type>::list(list const &other) {
 	*this = other;
 }
+
+
 
 /*
 **		DESTRUCTOR
@@ -288,7 +337,7 @@ void ft::list<Type>::pop_back() {
 }
 
 template <class Type>
-typename ft::list<Type>::iterator	ft::list<Type>::insert(iterator position, Type const& data) {
+typename ft::list<Type>::iterator ft::list<Type>::insert(iterator position, Type const& data) {
 	iterator it = this->begin();
 	iterator ite = this->end();
 	Node<Type> *tmp = this->_head;
@@ -349,37 +398,58 @@ typename ft::list<Type>::enable_if <!std::numeric_limits<InputIterator>::is_spec
 
 template <class Type>
 typename ft::list<Type>::iterator ft::list<Type>::erase(iterator position) {
-	Node<Type> *tmp = this->_head;
-	Node<Type> *nextTmp;
 
-	iterator ite = this->end();
-	for (iterator it = this->begin(); it != ite; it++) {
-		if (it == position) {
-			this->_size--;
-			nextTmp = tmp->next;
-			tmp->prev->next = nextTmp;
-			nextTmp->prev = tmp->prev;
+	if (position == this->end())
+		return this->end();
+	this->_size--;
+	Node<Type> *nextNode = position._curNode->next;
+	if (position == this->begin())
+		this->_head = nextNode;
+	if (position == --this->end())
+		this->_tail = nextNode->prev;
+	position._curNode->prev->next = nextNode;
+	nextNode->prev = position._curNode->prev;
+	delete position._curNode;
+	return iterator(nextNode);
 
-			if (tmp == this->_head)
-				this->_head = nextTmp;
-			if (tmp == this->_tail)
-				this->_tail = nextTmp->prev;
-			delete tmp;
-			return iterator(nextTmp);
-		}
-		tmp = tmp->next;
-	}
-	return iterator(this->_empty);
+	// Node<Type> *tmp = this->_head;
+	// Node<Type> *nextTmp;
+
+	// iterator ite = this->end();
+	// for (iterator it = this->begin(); it != ite; it++) {
+	// 	if (it == position) {
+	// 		this->_size--;
+	// 		nextTmp = tmp->next;
+	// 		tmp->prev->next = nextTmp;
+	// 		nextTmp->prev = tmp->prev;
+
+	// 		if (tmp == this->_head)
+	// 			this->_head = nextTmp;
+	// 		if (tmp == this->_tail)
+	// 			this->_tail = nextTmp->prev;
+	// 		delete tmp;
+	// 		return iterator(nextTmp);
+	// 	}
+	// 	tmp = tmp->next;
+	// }
+	// return iterator(this->_empty);
 }
 
 template <class Type>
 typename ft::list<Type>::iterator ft::list<Type>::erase(iterator first, iterator last) {
-	iterator ret;
+	// iterator ret;
+	int i = 0;
 	while (first != last) {
-		ret = erase(first);
-		first++;
+		// if (i == 2)
+		// 	break;
+		std::cout << "!";
+		first = erase(first);
+		std::cout << "{" << *first << "}";
+		break ;
+		// i++;
+		// first++;
 	}
-	return ret;
+	return first;
 }
 
 template <class Type>
@@ -514,6 +584,29 @@ void ft::list<Type>::splice(iterator position, list& x, iterator first, iterator
 		x._size -= len;
 	this->_size += len;
 }
+
+template <class Type>
+void	ft::list<Type>::remove(const Type& val) {
+	iterator ite = this->end();
+	iterator it = this->begin();
+	int i = 0;
+	for (; it != ite; ) {
+		std::cout << "|" << *it << "|";
+		if (*it == val)
+			it = this->erase(it);
+		i++;
+		if (i > 50)
+			break;
+	}
+	// std::cout << *it << std::endl;
+}
+
+template <class Type>
+template <class Predicate>
+void	ft::list<Type>::remove_if(Predicate pred) {
+
+}
+
 /*
 **		OVERLOADS
 */
