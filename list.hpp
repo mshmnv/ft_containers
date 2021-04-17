@@ -406,48 +406,19 @@ typename ft::list<Type>::iterator ft::list<Type>::erase(iterator position) {
 	if (position == this->begin())
 		this->_head = nextNode;
 	if (position == --this->end())
-		this->_tail = nextNode->prev;
+		this->_tail = position._curNode->prev;
 	position._curNode->prev->next = nextNode;
 	nextNode->prev = position._curNode->prev;
 	delete position._curNode;
 	return iterator(nextNode);
-
-	// Node<Type> *tmp = this->_head;
-	// Node<Type> *nextTmp;
-
-	// iterator ite = this->end();
-	// for (iterator it = this->begin(); it != ite; it++) {
-	// 	if (it == position) {
-	// 		this->_size--;
-	// 		nextTmp = tmp->next;
-	// 		tmp->prev->next = nextTmp;
-	// 		nextTmp->prev = tmp->prev;
-
-	// 		if (tmp == this->_head)
-	// 			this->_head = nextTmp;
-	// 		if (tmp == this->_tail)
-	// 			this->_tail = nextTmp->prev;
-	// 		delete tmp;
-	// 		return iterator(nextTmp);
-	// 	}
-	// 	tmp = tmp->next;
-	// }
-	// return iterator(this->_empty);
 }
 
 template <class Type>
 typename ft::list<Type>::iterator ft::list<Type>::erase(iterator first, iterator last) {
-	// iterator ret;
 	int i = 0;
+	iterator tmp;
 	while (first != last) {
-		// if (i == 2)
-		// 	break;
-		std::cout << "!";
 		first = erase(first);
-		std::cout << "{" << *first << "}";
-		break ;
-		// i++;
-		// first++;
 	}
 	return first;
 }
@@ -539,7 +510,7 @@ void ft::list<Type>::splice(iterator position, list& x, iterator i) {
 	if (position == this->begin())
 		this->_head = i._curNode;
 	if (position == this->end())
-			this->_tail = i._curNode;
+		this->_tail = i._curNode;
 	if (i == --x.end())
 		x._tail = i._curNode->prev;
 	if (i == x._head)
@@ -589,14 +560,14 @@ template <class Type>
 void	ft::list<Type>::remove(const Type& val) {
 	iterator ite = this->end();
 	iterator it = this->begin();
-	int i = 0;
+	// int i = 0;
 	for (; it != ite; ) {
-		std::cout << "|" << *it << "|";
+		// std::cout << "|" << *it << "|";
 		if (*it == val)
 			it = this->erase(it);
-		i++;
-		if (i > 50)
-			break;
+		// i++;
+		// if (i > 50)
+			// break;
 	}
 	// std::cout << *it << std::endl;
 }
