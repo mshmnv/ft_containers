@@ -66,7 +66,7 @@ namespace ft {
 				iterator& operator--(int) { --(*this); return *this; }
 				bool operator!=(iterator const &it) { return this->_curNode != it._curNode; }
 				bool operator==(iterator const &it) { return this->_curNode == it._curNode; }
-				int operator*() { return this->_curNode->getData(); }
+				Type operator*() { return this->_curNode->getData(); }
 			};
 
 			class	const_iterator : public iterator {
@@ -91,7 +91,7 @@ namespace ft {
 				reverse_iterator& operator++(int) { ++(*this); return *this; }
 				reverse_iterator& operator--(int) { --(*this); return *this; }
 				bool operator!=(reverse_iterator const &it) { return this->_curNode != it._curNode; }
-				int operator*() { return this->_curNode->getData(); }
+				Type operator*() { return this->_curNode->getData(); }
 			};
 			
 			class	const_reverse_iterator : public reverse_iterator {
@@ -140,11 +140,11 @@ namespace ft {
 			void splice(iterator, list&, iterator);
 			void splice(iterator, list&, iterator, iterator);
 
-//todo
 			void remove(const Type& val);
 			template <class Predicate>
 				void remove_if(Predicate pred);
 			
+//todo
 			void unique();
 			template <class BinaryPredicate>
 				void unique(BinaryPredicate binary_pred);
@@ -560,22 +560,105 @@ template <class Type>
 void	ft::list<Type>::remove(const Type& val) {
 	iterator ite = this->end();
 	iterator it = this->begin();
-	// int i = 0;
 	for (; it != ite; ) {
-		// std::cout << "|" << *it << "|";
 		if (*it == val)
 			it = this->erase(it);
-		// i++;
-		// if (i > 50)
-			// break;
+		else
+			it++;
 	}
-	// std::cout << *it << std::endl;
 }
 
 template <class Type>
 template <class Predicate>
 void	ft::list<Type>::remove_if(Predicate pred) {
+	for (iterator it = this->begin(); it != this->end(); ) {
+		if (pred(*it))
+			it = erase(it);
+		else
+			it++;
+	}
+}
 
+template <class Type>
+void	ft::list<Type>::unique() {
+	iterator prev = this->begin();
+	for (iterator it = ++this->begin(); it != this->end();) {
+		if (*it == *prev)
+			it = this->erase(it);
+		else {
+			it++;
+			prev++;
+		}
+	}
+}
+
+template <class Type>
+template <class BinaryPredicate>
+void	ft::list<Type>::unique(BinaryPredicate binary_pred) {
+	iterator prev = this->begin();
+	for (iterator it = ++this->begin(); it != this->end();) {
+		if (binary_pred(*prev, *it))
+			it = this->erase(it);
+		else {
+			it++;
+			prev++;
+		}
+	}
+}
+
+template <class Type>
+void ft::list<Type>::merge(list& x) {
+
+}
+
+// template <class Type>
+// template <class Compare>
+// void merge(list& x, Compare comp) {
+
+// }
+			
+template <class Type>
+void ft::list<Type>::sort() {
+
+}
+
+// template <class Type>
+// template <class Compare>
+// void sort(Compare comp) {
+
+// }
+
+template <class Type>
+void	ft::list<Type>::reverse() {
+	Node<Type> *tmpHead = this->_head;
+	Node<Type> *tmpTail = this->_tail;
+	Node<Type> *tmpNext;
+	Node<Type> *tmpPrev;
+	this->_head = tmpTail;
+	this->_tail = tmpHead;
+
+	for (int i = 0; i < this->_size / 2 - 1; i++) {
+		tmpHead->next->prev = tmpTail;
+		tmpTail->prev->next = tmpHead;
+		tmpNext = tmpHead->next;
+		tmpHead->next = tmpTail->next;
+		tmpHead->next->prev = tmpHead;
+		tmpTail->next = tmpNext;
+		tmpNext->prev = tmpTail;
+		tmpPrev = tmpHead->prev;
+		tmpHead->prev = tmpTail->prev; 
+		tmpTail->prev = tmpPrev;
+		tmpPrev->next = tmpTail;
+		tmpNext = tmpHead;
+		tmpHead = tmpTail->next;
+		tmpTail = tmpNext->prev;
+	}
+	tmpHead->next = tmpTail->next;
+	tmpHead->next->prev = tmpHead;
+	tmpTail->prev = tmpHead->prev;
+	tmpHead->prev->next = tmpTail;
+	tmpTail->next = tmpHead;
+	tmpHead->prev = tmpTail;
 }
 
 /*
