@@ -4,14 +4,12 @@
 #include <iostream>
 #include "Node.hpp"
 
-// CHANGE W/O LOOP
-// erase(iterator position)
-// insert
-
 namespace ft {
 	template <class Type>
 	class list {
 		private:
+			// std::allocator<Type> alloc;
+		
 			Node<Type>* _head;
 			Node<Type>* _tail;
 			Node<Type>* _empty;
@@ -21,11 +19,12 @@ namespace ft {
 				struct enable_if {};
 			template <class T>
 				struct enable_if <true, T> { typedef T type; };
+
 		public:
-			explicit list();
 // todo w/ allocator
-			// explicit list(int, const Type& val = value_type(),const allocator_type& alloc = allocator_type());
-			explicit list(int, const Type&);
+			explicit list(/* const allocator_type& alloc = allocator_type() */);
+// todo w/ allocator
+			explicit list(int, const Type& /* = value_type(), const allocator_type& alloc = allocator_type() */);
 // todo w/ allocator
 			template <class InputIterator>
 				list (InputIterator first, InputIterator last, /* const allocator_type& alloc = allocator_type(), */
@@ -33,17 +32,7 @@ namespace ft {
 			explicit list(list const &);
 			~list();
 	
-			Node<Type>* getNode() const;
 			list &operator=(list const &);
-
-			/*
-			**		ALLOCATORS
-			*/
-
-			class Allocator {
-			private:
-			public:
-			};
 
 			/*
 			**		ITERATORS
@@ -110,6 +99,10 @@ namespace ft {
 			const_reverse_iterator rbegin() const { return const_reverse_iterator(this->_tail); }
 			reverse_iterator rend() { return reverse_iterator(this->_head->prev); }
 			const_reverse_iterator rend() const { return const_reverse_iterator(this->_head->prev); }
+		
+			/*
+			**		METHODS
+			*/
 
 			bool empty() const;
 			size_t size() const;
@@ -208,7 +201,6 @@ template <class Type>
 ft::list<Type>::list(list const &other) {
 	*this = other;
 }
-
 
 
 /*
@@ -338,52 +330,26 @@ void ft::list<Type>::pop_back() {
 
 template <class Type>
 typename ft::list<Type>::iterator ft::list<Type>::insert(iterator position, Type const& data) {
-	iterator it = this->begin();
-	iterator ite = this->end();
-	Node<Type> *tmp = this->_head;
 
-	for (; it != ite; it++) {
-		if (it == position) {
-		this->_size++;
-		Node<Type> *newNode = new Node<Type>(data);
-			if (this->begin() == position)
-				this->_head = newNode;
-			tmp->prev->next = newNode;
-			newNode->prev = tmp->prev;
-			tmp->prev = newNode;
-			newNode->next = tmp;
-			return iterator(newNode);
-		}
-		tmp = tmp->next;
-	}
-	push_back(data);
-	return iterator(this->_tail);
+	Node<Type> *newNode = new Node<Type>(data);
+	this->_size++;
+	if (position == this->begin())
+		this->_head = newNode;
+	if (position == this->end())
+		this->_tail = newNode;
+	position._curNode->prev->next = newNode;
+	newNode->prev = position._curNode->prev;
+	position._curNode->prev = newNode;
+	newNode->next = position._curNode;
+	return iterator(newNode);
 }
 
 template <class Type>
 void	ft::list<Type>::insert(iterator position, size_t n, Type const& data) {
-	iterator it = this->begin();
-	iterator ite = this->end();
-	Node<Type> *tmp = this->_head;
 
-	for (; it != ite; it++) {
-		if (it == position) {
-			this->_size += n;
-			for (int j = 0; j < n; j++) {
-				Node<Type> *newNode = new Node<Type>(data);
-				if (this->begin() == position && j == 0)
-					this->_head = newNode;
-				tmp->prev->next = newNode;
-				newNode->prev = tmp->prev;
-				newNode->next = tmp;
-				tmp->prev = newNode;
-			}
-			return ;
-		}
-		tmp = tmp->next;
+	for (int i = 0; i < n; i++) {
+		position = this->insert(position, data);
 	}
-	for (int i = 0; i < n; i++)
-		push_back(data);
 }
 
 template <class Type>
@@ -608,25 +574,56 @@ void	ft::list<Type>::unique(BinaryPredicate binary_pred) {
 
 template <class Type>
 void ft::list<Type>::merge(list& x) {
-
+	iterator it = this->begin();
+	if (x.empty())
+		return ;
+	if (this->empty()) {
+		splice(this->begin(), x);
+		return ;
+	}
+	int n = this->_size;
+	for (int i = 0; i < n; i++) {
+		if (it._curNode->getData() > x._head->getData())
+			this->splice(it, x, x.begin());
+		else
+			it++;
+	}
+	if (!x.empty())
+		this->splice(++it, x);
 }
 
-// template <class Type>
-// template <class Compare>
-// void merge(list& x, Compare comp) {
-
-// }
+template <class Type>
+template <class Compare>
+void	ft::list<Type>::merge(list& x, Compare comp) {
+	iterator it = this->begin();
+	if (x.empty())
+		return ;
+	if (this->empty()) {
+		splice(this->begin(), x);
+		return ;
+	}
+	int n = this->_size;
+	for (int i = 0; i < n; i++) {
+		if (comp(x._head->getData(), it._curNode->getData()))
+			this->splice(it, x, x.begin());
+		else
+			it++;
+	}
+	if (!x.empty())
+		this->splice(++it, x);
+}
 			
 template <class Type>
-void ft::list<Type>::sort() {
+void	ft::list<Type>::sort() {
 
 }
 
-// template <class Type>
-// template <class Compare>
-// void sort(Compare comp) {
+template <class Type>
+template <class Compare>
+void	ft::list<Type>::sort(Compare comp) {
 
-// }
+}
+
 
 template <class Type>
 void	ft::list<Type>::reverse() {
@@ -674,22 +671,5 @@ ft::list<Type>& ft::list<Type>::operator=(list const& list) {
 	return *this;
 }
 
-// DELETE
-
-template <class Type>
-std::ostream& operator<<(std::ostream& out, ft::list<Type> const& list) {
-	Node<Type>* tmp = list.getNode();
-	for (int i = 0; i < list.size(); i++) {
-		out << tmp->getData() << " ";
-		tmp = tmp->next;
-	}
-	out << std::endl;
-	return out;
-}
-
-template <class Type>
-Node<Type>* ft::list<Type>::getNode() const {
-	return this->_head;
-}
 
 #endif

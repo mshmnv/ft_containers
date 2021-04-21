@@ -10,6 +10,9 @@ struct is_odd { bool operator()(const int& value) { return (value%2)==1; } };
 bool same_integral_part(double first, double second) { return ( int(first)==int(second) ); }
 struct is_near{ bool operator()(double first, double second) { return (fabs(first-second)<5.0); } };
 
+// FOR MERGE
+bool mycomparison(double first, double second) { return ( int(first)<int(second) ); }
+
 int main() {
 	std::list<int>::iterator ite;
 	std::list<int>::iterator it;
@@ -35,7 +38,10 @@ int main() {
 	std::cout << std::endl;
 	ft::list<int> list2(1, 10);
 	std::cout << "FT:  " << list2.front() << " | " << list2.back() << std::endl;
-	std::cout << list2 << std::endl;;
+	ft_it = list2.begin();
+	for (ft_ite = list2.end(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
 
 	stdList3.push_back(1);
 	stdList3.push_back(2);
@@ -53,7 +59,10 @@ int main() {
 	list3.push_back(4);
 	list3.push_back(5);
 	std::cout << "FT:  " << list3.front() << " | " << list3.back() << " | ";
-	std::cout << list3 << std::endl;
+	ft_it = list3.begin();
+	for (ft_ite = list3.end(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
 
 	std::list<int> stdOne(stdList3.begin(), stdList3.end());
 	std::cout << "STD: " << stdList3.front() << " | " << stdList3.back() << " | ";
@@ -134,7 +143,11 @@ int main() {
 	list3.push_back(3);
 	list3.push_back(4);
 	list3.push_back(5);
-	std::cout << std::endl << "FT:  " << list3 << std::endl;
+	std::cout << std::endl << "FT:  ";
+	ft_it = list3.begin();
+	for (ft_ite = list3.end(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
 
 
 	std::cout << std::endl << " -- POP_FRONT -- " << std::endl << std::endl;
@@ -148,7 +161,10 @@ int main() {
 	std::cout << std::endl;
 	list3.pop_front();
 	std::cout << "FT:  " << list3.size() << " | " << list3.front() << " | " << list3.back() << " | ";
-	std::cout << list3 << std::endl;
+	ft_it = list3.begin();
+	for (ft_ite = list3.end(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
 
 	std::cout << std::endl << " -- POP_BACK -- " << std::endl << std::endl;
 
@@ -160,7 +176,11 @@ int main() {
 	std::cout << std::endl;
 	list3.pop_back();
 	std::cout << "FT:  " << list3.size() << " | " << list3.front() << " | " << list3.back() << " | ";
-	std::cout << list3 << std::endl;
+	ft_it = list3.begin();
+	for (ft_ite = list3.end(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
+	
 
 	std::cout << std::endl << " -- PUSH_FRONT -- " << std::endl << std::endl;
 
@@ -172,7 +192,10 @@ int main() {
 	std::cout << std::endl;
 	list3.push_front(100);
 	std::cout << "FT:  " << list3.size() << " | " << list3.front() << " | " << list3.back() << " | ";
-	std::cout << list3 << std::endl;
+	ft_it = list3.begin();
+	for (ft_ite = list3.end(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl;
 	
 
 	std::cout << std::endl << " -- ITERATORS -- " << std::endl << std::endl;
@@ -234,7 +257,6 @@ int main() {
 	std::cout << std::endl << " -- INSERT -- " << std::endl << std::endl;
 
 
-
 	stdList4.insert(stdList4.begin(), 4);
 	stdList4.insert(stdList4.begin(), 3);
 	stdList4.insert(stdList4.begin(), 1);
@@ -289,7 +311,7 @@ int main() {
 	for (int i = 0; i < 10; i++)
 		n.push_back(i);
 	n.insert(n.begin(), n.begin(), n.end());
-	std::cout << std::endl << "STD: ";
+	std::cout << "STD: ";
 	ite = n.end();
 	for (it = n.begin(); it != ite; it++)
 		std::cout << *it << " ";
@@ -302,36 +324,35 @@ int main() {
 	ft_ite = m.end();
 	for (ft_it = m.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
-	std::cout << std::endl;
+	std::cout << std::endl << std::endl;
 
-	// ite = stdList4.begin();
-	// stdList4.insert(ite, 10, 9);
-	// std::cout << "STD: ";
-	// ite = stdList4.end();
-	// for (it = stdList4.begin(); it != ite; it++)
-	// 	std::cout << *it << " ";
-	// std::cout << std::endl << "FT:  ";
-	// ft_ite = list4.begin();
-	// list4.insert(ft_ite, 10, 9);
-	// ft_ite = list4.end();
-	// for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
-	// 	std::cout << *ft_it << " ";
-	// std::cout << std::endl << std::endl;
+	ite = stdList4.begin();
+	stdList4.insert(ite, 10, 9);
+	std::cout << "STD: ";
+	ite = stdList4.end();
+	for (it = stdList4.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << std::endl << "FT:  ";
+	ft_ite = list4.begin();
+	list4.insert(ft_ite, 10, 9);
+	ft_ite = list4.end();
+	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl << std::endl;
 
-
-	// ite = stdList4.end();
-	// stdList4.insert(ite, 10, 9);
-	// std::cout << "STD: ";
-	// ite = stdList4.end();
-	// for (it = stdList4.begin(); it != ite; it++)
-	// 	std::cout << *it << " ";
-	// std::cout << std::endl << "FT:  ";
-	// ft_ite = list4.end();
-	// list4.insert(ft_ite, 10, 9);
-	// ft_ite = list4.end();
-	// for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
-	// 	std::cout << *ft_it << " ";
-	// std::cout << std::endl << std::endl;
+	ite = stdList4.end();
+	stdList4.insert(ite, 10, 9);
+	std::cout << "STD: ";
+	ite = stdList4.end();
+	for (it = stdList4.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << std::endl << "FT:  ";
+	ft_ite = list4.end();
+	list4.insert(ft_ite, 10, 9);
+	ft_ite = list4.end();
+	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << std::endl << std::endl;
 
 
 	std::cout << std::endl << " -- INSERT W/ ITERATORS -- " << std::endl << std::endl;
@@ -812,11 +833,118 @@ int main() {
 		std::cout << *ft_dit << " ";
 	std::cout << std::endl << std::endl;
 
-
 	std::cout << std::endl << " -- MERGE -- " << std::endl << std::endl;
-	
-	std::cout << std::endl << " -- SORT -- " << std::endl << std::endl;
+	std::list<int> stdMerge1;
+	std::list<int> stdMerge2;
+	ft::list<int> ftMerge1;
+	ft::list<int> ftMerge2;
+	for (int i = 0; i < 10; i += 2) {
+		if (i % 2) {
+			stdMerge1.push_back(i);
+			stdMerge2.push_back(i + 1);
+			ftMerge1.push_back(i);
+			ftMerge2.push_back(i + 1);
+		}
+		else {
+			stdMerge1.push_back(i + 1);
+			stdMerge2.push_back(i);
+			ftMerge1.push_back(i + 1);
+			ftMerge2.push_back(i);
+		}
+	}
+	std::cout << "STD: ";
+	ite = stdMerge1.end();
+	for (it = stdMerge1.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << "| ";
+	ite = stdMerge2.end();
+	for (it = stdMerge2.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << "| ";
+	stdMerge1.merge(stdMerge2);
+	ite = stdMerge1.end();
+	for (it = stdMerge1.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << "| ";
+	ite = stdMerge2.end();
+	for (it = stdMerge2.begin(); it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << "| " << std::endl;
 
+	std::cout << "FT:  ";
+	ft_ite = ftMerge1.end();
+	for (ft_it = ftMerge1.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << "| ";
+	ft_ite = ftMerge2.end();
+	for (ft_it = ftMerge2.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << "| ";
+	ftMerge1.merge(ftMerge2);
+	ft_ite = ftMerge1.end();
+	for (ft_it = ftMerge1.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << "| ";
+	ft_ite = ftMerge2.end();
+	for (ft_it = ftMerge2.begin(); ft_it != ft_ite; ft_it++)
+		std::cout << *ft_it << " ";
+	std::cout << "| " << std::endl;
+	
+	std::list<double> stdDMerge1;
+	std::list<double> stdDMerge2;
+	stdDMerge1.push_back(1.1);
+	stdDMerge1.push_back(4.1);
+	stdDMerge1.push_back(6.5);
+	stdDMerge2.push_back(2.5);
+	stdDMerge2.push_back(10.5);
+	stdDMerge2.push_back(8.9);
+	ft::list<double> ftDMerge1;
+	ft::list<double> ftDMerge2;
+	ftDMerge1.push_back(1.1);
+	ftDMerge1.push_back(4.1);
+	ftDMerge1.push_back(6.5);
+	ftDMerge2.push_back(2.5);
+	ftDMerge2.push_back(10.5);
+	ftDMerge2.push_back(8.9);
+	std::cout << "STD: ";
+	dite = stdDMerge1.end();
+	for (dit = stdDMerge1.begin(); dit != dite; dit++)
+		std::cout << *dit << " ";
+	std::cout << "| ";
+	dite = stdDMerge2.end();
+	for (dit = stdDMerge2.begin(); dit != dite; dit++)
+		std::cout << *dit << " ";
+	std::cout << "| ";
+	stdDMerge1.merge(stdDMerge2, mycomparison);
+	// stdDMerge1.merge(stdDMerge2);
+	dite = stdDMerge1.end();
+	for (dit = stdDMerge1.begin(); dit != dite; dit++)
+		std::cout << *dit << " ";
+	std::cout << "| ";
+	dite = stdDMerge2.end();
+	for (dit = stdDMerge2.begin(); dit != dite; dit++)
+		std::cout << *dit << " ";
+	std::cout << "| " << std::endl;
+
+	std::cout << "FT:  ";
+	ft_dite = ftDMerge1.end();
+	for (ft_dit = ftDMerge1.begin(); ft_dit != ft_dite; ft_dit++)
+		std::cout << *ft_dit << " ";
+	std::cout << "| ";
+	ft_dite = ftDMerge2.end();
+	for (ft_dit = ftDMerge2.begin(); ft_dit != ft_dite; ft_dit++)
+		std::cout << *ft_dit << " ";
+	std::cout << "| ";
+	ftDMerge1.merge(ftDMerge2, mycomparison);
+	// ftDMerge1.merge(ftDMerge2);
+	ft_dite = ftDMerge1.end();
+	for (ft_dit = ftDMerge1.begin(); ft_dit != ft_dite; ft_dit++)
+		std::cout << *ft_dit << " ";
+	std::cout << "| ";
+	ft_dite = ftDMerge2.end();
+	for (ft_dit = ftDMerge2.begin(); ft_dit != ft_dite; ft_dit++)
+		std::cout << *ft_dit << " ";
+	std::cout << "| " << std::endl;
 
 	std::cout << std::endl << " -- REVERSE -- " << std::endl << std::endl;
 	stdEmpty.push_back(1);
@@ -848,5 +976,40 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
 
+	std::cout << std::endl << " -- SORT -- " << std::endl << std::endl;
+
+	std::list<double> stdDouble2;
+	stdDouble2.push_back(3.1);
+	stdDouble2.push_back(13.1);
+	stdDouble2.push_back(2.2);
+	stdDouble2.push_back(2.9);
+	stdDouble2.push_back(2.91);
+
+	std::cout << "STD: ";
+	dit = stdDouble2.begin();
+	for (dite = stdDouble2.end(); dit != dite; dit++)
+		std::cout << *dit << " ";
+	std::cout << "| ";
+	stdDouble2.sort();
+	dit = stdDouble2.begin();
+	for (dite = stdDouble2.end(); dit != dite; dit++)
+		std::cout << *dit << " ";
+	std::cout << std::endl << "FT:  ";
+
+	ft::list<double> ftDouble2;
+	ftDouble2.push_back(3.1);
+	ftDouble2.push_back(13.1);
+	ftDouble2.push_back(2.2);
+	ftDouble2.push_back(2.9);
+	ftDouble2.push_back(2.91);
+	ft_dit = ftDouble2.begin();
+	for (ft_dite = ftDouble2.end(); ft_dit != ft_dite; ft_dit++)
+		std::cout << *ft_dit << " ";
+	std::cout << "| ";
+	ftDouble2.sort();
+	ft_dit = ftDouble2.begin();
+	for (ft_dite = ftDouble2.end(); ft_dit != ft_dite; ft_dit++)
+		std::cout << *ft_dit << " ";
+	std::cout << std::endl;
 	return 0;
 }
