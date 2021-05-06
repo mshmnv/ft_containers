@@ -10,6 +10,8 @@ namespace ft {
 		private:
 		    typedef Alloc allocator_type;
 			typedef Type value_type;
+			typedef value_type& reference;
+			typedef const value_type& const_reference;
 // todo
 //			typedef size_t size_type;
             std::allocator<Node<value_type> > _nodeAllocator;
@@ -33,12 +35,11 @@ namespace ft {
 					typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
 			explicit list(list const &);
 			~list();
-	
-			list &operator=(list const &);
 
-			/*
-			**		ITERATORS
-			*/
+            allocator_type get_allocator() const { return this->_allocatorType; }
+            list &operator=(list const &);
+
+			////    ITERATORS    ////
 
 			class	const_iterator;
 			class	iterator {
@@ -101,17 +102,15 @@ namespace ft {
 			reverse_iterator rend() { return reverse_iterator(this->_head->prev); }
 			const_reverse_iterator rend() const { return const_reverse_iterator(this->_head->prev); }
 		
-			/*
-			**		METHODS
-			*/
+			////    METHODS    ////
 
 			bool empty() const;
 			size_t size() const;
             size_t max_size() const;
-			Type& back();
-			Type const& back() const;
-			Type& front();
-			Type const& front() const;
+			reference back();
+            const_reference back() const;
+			reference front();
+            const_reference front() const;
 		
 			void assign(size_t, Type const&);
 			template <class InputIterator>
@@ -145,24 +144,34 @@ namespace ft {
 			void merge (list& x);
 			template <class Compare>
 				void merge(list& x, Compare comp);
+            void reverse();
 // todo sort()
             void sort();
 			template <class Compare>
 				void sort(Compare comp);
-			
-			void reverse();
-		
-			 allocator_type get_allocator() const { return this->_allocatorType; }
 	};
+	template <class Type, class Alloc>
+    void swap(ft::list<Type,Alloc>& x, ft::list<Type,Alloc>& y);
+    template <class Type, class Alloc>
+    bool operator==(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs);
+    template <class Type, class Alloc>
+    bool operator!=(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs);
+    template <class Type, class Alloc>
+    bool operator<(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs);
+    template <class Type, class Alloc>
+    bool operator>(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs);
+    template <class Type, class Alloc>
+    bool operator<=(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs);
+    template <class Type, class Alloc>
+    bool operator>=(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs);
 }
 
-/*
-**		CONSTRUCTORS
-*/
+////    CONSTRUCTORS    ////
 
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc), _size(0){
 	this->_empty = this->_nodeAllocator.allocate(1);
+	this->_nodeAllocator.construct(this->_empty, 0);
 	this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
@@ -174,7 +183,8 @@ ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc)
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(int count, const Type& data, const allocator_type& alloc) : _allocatorType(alloc), _size(0) {
 	this->_empty = this->_nodeAllocator.allocate(1);
-	this->_head = this->_empty;
+    this->_nodeAllocator.construct(this->_empty, 0);
+    this->_head = this->_empty;
 	this->_tail = this->_empty;
 	for (int i = 0; i < count; i++)
 		this->push_back(data);
@@ -186,7 +196,8 @@ ft::list<Type, Alloc>::list (InputIterator first, InputIterator last, const allo
 	typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
 	this->_size = 0;
 	this->_empty = this->_nodeAllocator.allocate(1);
-	this->_head = this->_empty;
+    this->_nodeAllocator.construct(this->_empty, 0);
+    this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
 	this->_head->prev = this->_empty;
@@ -203,9 +214,7 @@ ft::list<Type, Alloc>::list(list const &other) {
 }
 
 
-/*
-**		DESTRUCTOR
-*/
+////    DESTRUCTOR    ////
 
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::~list() {
@@ -217,9 +226,7 @@ ft::list<Type, Alloc>::~list() {
 	}
 }
 
-/*
-**		METHODS
-*/
+////    METHODS    ////
 
 template <class Type, class Alloc>
 bool ft::list<Type, Alloc>::empty() const {
@@ -238,22 +245,22 @@ size_t ft::list<Type, Alloc>::max_size() const {
 
 
 template <class Type, class Alloc>
-Type& ft::list<Type, Alloc>::back() {
+typename ft::list<Type, Alloc>::reference ft::list<Type, Alloc>::back() {
 	return this->_tail->getData();
 }
 
 template <class Type, class Alloc>
-Type const& ft::list<Type, Alloc>::back() const{
+typename ft::list<Type, Alloc>::const_reference ft::list<Type, Alloc>::back() const{
 	return this->_tail->getData();
 }
 
 template <class Type, class Alloc>
-Type& ft::list<Type, Alloc>::front() {
+typename ft::list<Type, Alloc>::reference ft::list<Type, Alloc>::front() {
 	return this->_head->getData();
 }
 
 template <class Type, class Alloc>
-Type  const& ft::list<Type, Alloc>::front() const{
+typename ft::list<Type, Alloc>::const_reference ft::list<Type, Alloc>::front() const{
 	return this->_head->getData();
 }
 
@@ -280,7 +287,7 @@ template <class Type, class Alloc>
 void ft::list<Type, Alloc>::push_front(Type const &data) {
 	this->_size++;
 	Node<Type>* tmp = this->_nodeAllocator.allocate(1);
-	tmp->setData(data);
+    this->_nodeAllocator.construct(tmp, data);
 	this->_head->prev = tmp;
 	tmp->next = this->_head;
 	this->_empty->next = tmp;
@@ -296,7 +303,6 @@ void ft::list<Type, Alloc>::pop_front() {
 	tmp->prev = this->_empty;
 	this->_empty->next = tmp;
     this->_nodeAllocator.deallocate(this->_head, 1);
-//    delete this->_head;
 	this->_head = tmp;
 }
 
@@ -304,7 +310,7 @@ template <class Type, class Alloc>
 void ft::list<Type, Alloc>::push_back(Type const &data) {
 	this->_size++;
     Node<Type>* tmp = this->_nodeAllocator.allocate(1);
-    tmp->setData(data);
+    this->_nodeAllocator.construct(tmp, data);
 	if (this->_size == 1)
 		this->_head = tmp;
 	this->_tail->next = tmp;
@@ -323,14 +329,13 @@ void ft::list<Type, Alloc>::pop_back() {
 	tmp->next = this->_empty;
 	this->_empty->prev = tmp;
 	this->_nodeAllocator.deallocate(this->_tail, 1);
-//	delete this->_tail;
 	this->_tail = tmp;
 }
 
 template <class Type, class Alloc>
 typename ft::list<Type, Alloc>::iterator ft::list<Type, Alloc>::insert(iterator position, Type const& data) {
     Node<Type>* newNode = this->_nodeAllocator.allocate(1);
-    newNode->setData(data);
+    this->_nodeAllocator.construct(newNode, data);
 	this->_size++;
 	if (position == this->begin())
 		this->_head = newNode;
@@ -374,7 +379,6 @@ typename ft::list<Type, Alloc>::iterator ft::list<Type, Alloc>::erase(iterator p
 	position._curNode->prev->next = nextNode;
 	nextNode->prev = position._curNode->prev;
     this->_nodeAllocator.deallocate(position._curNode, 1);
-//    delete position._curNode;
 	return iterator(nextNode);
 }
 
@@ -417,7 +421,6 @@ void ft::list<Type, Alloc>::resize(size_t n, Type data) {
 				tmp = tmpNode;
 				tmpNode = tmpNode->next;
                 this->_nodeAllocator.deallocate(tmp, 1);
-//                delete tmp;
 			}
 			return ;
 		}
@@ -436,9 +439,9 @@ void ft::list<Type, Alloc>::clear() {
 			tmp = this->_head;
 			this->_head = this->_head->next;
             this->_nodeAllocator.deallocate(tmp, 1);
-//            delete tmp;
 		}
 		this->_empty = this->_nodeAllocator.allocate(1);
+		this->_nodeAllocator.construct(this->_empty, 0);
 		this->_head = this->_empty;
 		this->_tail = this->_empty;
 		this->_head->next = this->_empty;
@@ -613,7 +616,7 @@ void	ft::list<Type, Alloc>::merge(list& x, Compare comp) {
 	if (!x.empty())
 		this->splice(++it, x);
 }
-			
+
 template <class Type, class Alloc>
 void	ft::list<Type, Alloc>::sort() {
 
@@ -659,20 +662,72 @@ void	ft::list<Type, Alloc>::reverse() {
 	tmpHead->prev = tmpTail;
 }
 
-/*
-**		OVERLOADS
-*/
+////     OVERLOADS    ////
+
 
 template <class Type, class Alloc>
 ft::list<Type, Alloc>& ft::list<Type, Alloc>::operator=(list const& list) {
-	this->_head = list._head;
-	this->_tail = list._tail;
-	this->_empty = list._empty;
-	this->_size = list._size;
-    this->_allocatorType = vector._allocatorType;
-    this->_nodeAllocator = vector._nodeAllocator;
-	return *this;
+    this->_head = list._head;
+    this->_tail = list._tail;
+    this->_empty = list._empty;
+    this->_size = list._size;
+    this->_allocatorType = list._allocatorType;
+    this->_nodeAllocator = list._nodeAllocator;
+    return *this;
 }
 
+////    NON-MEMBER FUNCTIONS    ////
+
+template <class Type, class Alloc>
+bool ft::operator==(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs) {
+    if (lhs.size() != rhs.size())
+        return false;
+    typename ft::list<Type,Alloc>::iterator lit = lhs.begin();
+    typename ft::list<Type,Alloc>:: iterator lite = lhs.end();
+    typename ft::list<Type,Alloc>::iterator rit = rhs.begin();
+    for (; lit != lite; lit++, rit++) {
+        if (*lit != *rit)
+            return false;
+    }
+    return true;
+}
+
+template <class Type, class Alloc>
+bool ft::operator!=(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs) {
+    return !(lhs==rhs);
+}
+
+template <class Type, class Alloc>
+bool ft::operator<(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs) {
+    typename ft::list<Type,Alloc>::iterator lit = lhs.begin();
+    typename ft::list<Type,Alloc>::iterator lite = lhs.end();
+    typename ft::list<Type,Alloc>::iterator rit = rhs.begin();
+    typename ft::list<Type,Alloc>::iterator rite = rhs.end();
+    for (; lit != lite; lit++, rit++) {
+        if (*lit > *rit)
+            return false;
+    }
+    return true;
+}
+
+template <class Type, class Alloc>
+bool ft::operator>(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs) {
+    return !(lhs<rhs);
+}
+
+template <class Type, class Alloc>
+bool ft::operator<=(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs) {
+    return !(lhs>rhs);
+}
+
+template <class Type, class Alloc>
+bool ft::operator>=(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs) {
+    return !(lhs<rhs);
+}
+
+template <class Type, class Alloc>
+void ft::swap(ft::list<Type,Alloc>& x, ft::list<Type,Alloc>& y) {
+    x.swap(y);
+}
 
 #endif

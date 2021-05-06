@@ -391,6 +391,8 @@ int main() {
 	std::list<int> first(5, 100);
 	std::list<int> second(4, 200);
 	first.swap(second);
+//    std::swap(first, second);
+
 	std::cout << "STD: ";
 	ite = first.end();
 	for (it = first.begin(); it != ite; it++)
@@ -404,6 +406,7 @@ int main() {
 	ft::list<int> ft_first(5, 100);
 	ft::list<int> ft_second(4, 200);
 	ft_first.swap(ft_second);
+//	ft::swap(ft_first, ft_second);
 
 	ft_ite = ft_first.end();
 	for (ft_it = ft_first.begin(); ft_it != ft_ite; ft_it++)
@@ -1011,5 +1014,29 @@ int main() {
 	for (ft_dite = ftDouble2.end(); ft_dit != ft_dite; ft_dit++)
 		std::cout << *ft_dit << " ";
 	std::cout << std::endl;
-	return 0;
+
+	std::cout << std::endl << " -- COMPARISON OVERLOADS -- " << std::endl << std::endl;
+    std::list<int> a;
+    std::list<int> b;
+    std::list<int> c;
+
+    ft::list<int> ft_a;
+    ft::list<int> ft_b;
+    ft::list<int> ft_c;
+    for (int i = 0; i < 3; i++) {
+        a.push_back(i * 10);  ft_a.push_back(i * 10);
+        b.push_back(i);           ft_b.push_back(i);
+        ft_c.push_back(i * 10);
+    }
+    c = a;
+//todo fix operator=    ft_c = ft_a; !malloc should I allocate the same fields for list
+
+    std::cout << std::boolalpha << "STD " << (a==b) << "\tFT " << (ft_a==ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (a!=b) << "\tFT " << (ft_a!=ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (b>c) << "\tFT " << (ft_b>ft_c) << std::endl;
+    std::cout << std::boolalpha << "STD " << (c>b) << "\tFT " << (ft_c>ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
+
+    return 0;
 }
