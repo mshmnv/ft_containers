@@ -1,13 +1,10 @@
 #ifndef NODE_HPP
 #define NODE_HPP
-#include "list.hpp"
-
 
 template <class Type>
 class Node {
 private:
 	Type	_data;
-
 public:
 	Node	*next;
 	Node	*prev;

@@ -92,7 +92,7 @@ int main() {
 
 	std::cout << std::endl << " -- ASSIGN -- " << std::endl << std::endl;
 
-	stdList3.assign(3, 9);	
+	stdList3.assign(3, 9);
 	std::cout << "STD: " << stdList3.size() << " | " << stdList3.front() << " | " << stdList3.back() << " | ";
 	ite = stdList3.end();
 	for (it = stdList3.begin(); it != ite; it++)
@@ -104,7 +104,6 @@ int main() {
 	for (ft_it = list3.begin(); ft_it != ft_ite; ft_it++ )
 		std::cout << *ft_it << " ";
 	std::cout << std::endl << std::endl;
-
 	std::list<int> stdNew;
 	for (int i = 0; i < 15; i++)
 		stdNew.push_back(i);
@@ -124,6 +123,7 @@ int main() {
 	for (ft_it = list3.begin(); ft_it != ft_ite; ft_it++ )
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
+
 
 	std::cout << std::endl << " -- PUSH_BACK -- " << std::endl << std::endl;
 
@@ -180,7 +180,7 @@ int main() {
 	for (ft_ite = list3.end(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
-	
+
 
 	std::cout << std::endl << " -- PUSH_FRONT -- " << std::endl << std::endl;
 
@@ -225,7 +225,7 @@ int main() {
 	for (ft_c_it = list3.begin(); ft_c_it != ft_c_ite; ft_c_it++)
 		std::cout << *ft_c_it << " ";
 	std::cout << std::endl << std::endl;
-	
+
 	std::cout << "STD: ";
 	std::list<int>::reverse_iterator r_ite;
 	std::list<int>::reverse_iterator r_it;
@@ -273,7 +273,7 @@ int main() {
 	for (it = stdList4.begin(); it != ite; it++)
 		std::cout << *it << " ";
 	std::cout << std::endl << "FT:  ";
-	
+
 	list4.insert(list4.begin(), 4);
 	list4.insert(list4.begin(), 3);
 	list4.insert(list4.begin(), 1);
@@ -400,7 +400,7 @@ int main() {
 	for (it = second.begin(); it != ite; it++)
 		std::cout << *it << " ";
 	std::cout << std::endl << "FT:  ";
-	
+
 	ft::list<int> ft_first(5, 100);
 	ft::list<int> ft_second(4, 200);
 	ft_first.swap(ft_second);
@@ -464,7 +464,7 @@ int main() {
 
 	std::cout << std::endl << " -- ERASE -- " << std::endl << std::endl;
 
-	
+
 	stdList4.erase(++stdList4.begin());
 	stdList4.erase(stdList4.begin());
 	stdList4.erase(--stdList4.end());
@@ -889,7 +889,7 @@ int main() {
 	for (ft_it = ftMerge2.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << "| " << std::endl;
-	
+
 	std::list<double> stdDMerge1;
 	std::list<double> stdDMerge2;
 	stdDMerge1.push_back(1.1);
