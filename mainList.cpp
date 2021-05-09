@@ -1,6 +1,7 @@
 #include "list.hpp"
 #include <list>
 #include <cmath>
+#include <time.h>
 
 // FOR REMOVE_IF
 bool single_digit(const int& value) { return (value<10); }
@@ -1046,22 +1047,43 @@ int main() {
     std::cout << std::endl << "FT:  ";
 
 
-    ft::list<std::string> ft_strList;
-    ft_strList.push_back("one");
-    ft_strList.push_back("two");
-    ft_strList.push_back("three");
-    ft_strList.sort();
-    ft::list<std::string>::iterator ft_sit;
-    ft::list<std::string>::iterator ft_site;
-    ft_sit = ft_strList.begin();
-    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
-        std::cout << *ft_sit << " ";
-    std::cout << "| ";
-    ft_strList.sort(compare_nocase);
-    ft_sit = ft_strList.begin();
-    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
-        std::cout << *ft_sit << " ";
+//    ft::list<std::string> ft_strList;
+//    ft_strList.push_back("one");
+//    ft_strList.push_back("two");
+//    ft_strList.push_back("three");
+//    ft_strList.sort();
+//    ft::list<std::string>::iterator ft_sit;
+//    ft::list<std::string>::iterator ft_site;
+//    ft_sit = ft_strList.begin();
+//    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
+//        std::cout << *ft_sit << " ";
+//    std::cout << "| ";
+//    ft_strList.sort(compare_nocase);
+//    ft_sit = ft_strList.begin();
+//    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
+//        std::cout << *ft_sit << " ";
     std::cout << std::endl;
+
+    std::list<int> bigList;
+    for (int i = 0; i < 1000000; i++) {
+        bigList.push_back(rand() % 1000);
+    }
+    std::cout << "STD ";
+    unsigned int startTime = clock();
+    bigList.sort();
+    unsigned int endTime = clock();
+    std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
+
+    ft::list<int> ft_bigList;
+    for (int i = 0; i < 1000000; i++) {
+        ft_bigList.push_back(rand() % 1000);
+    }
+    std::cout << "FT  ";
+    startTime = clock();
+    ft_bigList.sort();
+    endTime = clock();
+    std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
+
 
 
 //	std::cout << std::endl << " -- COMPARISON OVERLOADS -- " << std::endl << std::endl;
