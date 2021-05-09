@@ -454,6 +454,8 @@ void ft::list<Type, Alloc>::clear() {
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::splice(iterator position, list& x) {
+    if (x._size == 0)
+        return;
 	this->_size += x._size;
 	x._size = 0;
 	
@@ -475,6 +477,8 @@ void ft::list<Type, Alloc>::splice(iterator position, list& x) {
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::splice(iterator position, list& x, iterator i) {
+    if (x._size == 0)
+        return;
 	this->_size++;
 	x._size--;
 	if (position == this->begin())
@@ -619,13 +623,49 @@ void	ft::list<Type, Alloc>::merge(list& x, Compare comp) {
 
 template <class Type, class Alloc>
 void	ft::list<Type, Alloc>::sort() {
+    if (this->_size > 1) {
+        list<Type> less;
+        list<Type> more;
+        Node<Type> *base = this->_head;
 
+        Node<Type> *right = this->_head->next;
+        for (Node<Type> *left = this->_tail->next; right != left;) {
+            Node<Type> *tmp = right->next;
+            if (right->getData() <= base->getData())
+                less.splice(less.end(), *this, iterator(right));
+            else
+                more.splice(more.end(), *this, iterator(right));
+            right = tmp;
+        }
+        less.sort();
+        more.sort();
+        this->splice(this->begin(), less);
+        this->splice(this->end(), more);
+    }
 }
 
 template <class Type, class Alloc>
 template <class Compare>
 void	ft::list<Type, Alloc>::sort(Compare comp) {
+    if (this->_size > 1) {
+        list<Type> less;
+        list<Type> more;
+        Node<Type> *base = this->_head;
 
+        Node<Type> *right = this->_head->next;
+        for (Node<Type> *left = this->_tail->next; right != left;) {
+            Node<Type> *tmp = right->next;
+            if (comp(right->getData(), base->getData()))
+                less.splice(less.end(), *this, iterator(right));
+            else
+                more.splice(more.end(), *this, iterator(right));
+            right = tmp;
+        }
+        less.sort();
+        more.sort();
+        this->splice(this->begin(), less);
+        this->splice(this->end(), more);
+    }
 }
 
 
