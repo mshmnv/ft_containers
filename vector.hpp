@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Node.hpp"
 
+// todo capacity in push_back
+
 namespace ft {
     template <class Type, class Alloc = std::allocator<Type> >
     class vector {
@@ -17,7 +19,8 @@ namespace ft {
         Node<Type>* _head;
         Node<Type>* _tail;
         Node<Type>* _empty;
-        size_t      _size;
+        size_type   _size;
+        size_type   _capacity;
 
         template <bool B, class T = void>
         struct enable_if {};
@@ -107,7 +110,7 @@ namespace ft {
         void resize(size_type n, value_type val = value_type());
         size_type capacity() const;
         bool empty() const;
-//        void reserve(size_type n);
+        void reserve(size_type n);
 
         // operator[]
         // at[]
@@ -125,9 +128,10 @@ namespace ft {
 ////    CONSTRUCTORS    ////
 
 template <class Type, class Alloc>
-ft::vector<Type, Alloc>::vector(const allocator_type& alloc) {
+ft::vector<Type, Alloc>::vector(const allocator_type& alloc) :
+    _allocatorType(alloc), _size(0), _capacity(0) {
     this->_empty = this->_nodeAllocator.allocate(1);
-    this->_nodeAllocator.construct(this->_empty, 0);
+//    this->_nodeAllocator.construct(this->_empty, 0);
     this->_head = this->_empty;
     this->_tail = this->_empty;
     this->_head->next = this->_empty;
@@ -137,9 +141,10 @@ ft::vector<Type, Alloc>::vector(const allocator_type& alloc) {
 }
 
 template <class Type, class Alloc>
-ft::vector<Type, Alloc>::vector(size_type n, const value_type& val, const allocator_type& alloc) {
+ft::vector<Type, Alloc>::vector(size_type n, const value_type& val, const allocator_type& alloc) :
+    _allocatorType(alloc), _size(0), _capacity(0) {
     this->_empty = this->_nodeAllocator.allocate(1);
-    this->_nodeAllocator.construct(this->_empty, 0);
+//    this->_nodeAllocator.construct(this->_empty, 0);
     this->_head = this->_empty;
     this->_tail = this->_empty;
     for (int i = 0; i < n; i++)
@@ -149,10 +154,10 @@ ft::vector<Type, Alloc>::vector(size_type n, const value_type& val, const alloca
 template <class Type, class Alloc>
 template <class InputIterator>
 ft::vector<Type, Alloc>::vector (InputIterator first, InputIterator last, const allocator_type& alloc,
-    typename ft::vector<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
-    this->_size = 0;
+    typename ft::vector<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) :
+    _size(0), _capacity(0) {
     this->_empty = this->_nodeAllocator.allocate(1);
-    this->_nodeAllocator.construct(this->_empty, 0);
+//    this->_nodeAllocator.construct(this->_empty, 0);
     this->_head = this->_empty;
         this->_tail = this->_empty;
         this->_head->next = this->_empty;
@@ -179,6 +184,8 @@ ft::vector<Type, Alloc>::~vector() {
         this->_head = this->_head->next;
         this->_nodeAllocator.deallocate(tmp, 1);
     }
+    if (this->_empty)
+        this->_nodeAllocator.deallocate(this->_empty, 1);
 }
 
 ////    METHODS    ////
@@ -190,18 +197,12 @@ typename ft::vector<Type, Alloc>::size_type ft::vector<Type, Alloc>::size() cons
 
 template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::size_type ft::vector<Type, Alloc>::max_size() const {
-    return (std::numeric_limits<size_t>::max() / sizeof(this->_head));
+    return (std::numeric_limits<size_type>::max() / sizeof(this->_head));
 }
 
 
-
 template <class Type, class Alloc>
-bool ft::vector<Type, Alloc>::empty() const {
-    return this->_size == 0;
-}
-
-template <class Type, class Alloc>
-void ft::vector<Type, Alloc>::resize(size_t n, Type val) {
+void ft::vector<Type, Alloc>::resize(size_type n, Type val) {
     Node<Type> *tmpNode = this->_head;
 
     for (int i = 0; i < this->_size; i++) {
@@ -212,6 +213,7 @@ void ft::vector<Type, Alloc>::resize(size_t n, Type val) {
             this->_empty->prev = tmpNode->prev;
             for (;this->_size != n; ) {
                 this->_size--;
+                this->_capacity--;
                 tmp = tmpNode;
                 tmpNode = tmpNode->next;
                 this->_nodeAllocator.deallocate(tmp, 1);
@@ -223,20 +225,21 @@ void ft::vector<Type, Alloc>::resize(size_t n, Type val) {
     for (;this->_size < n; )
         push_back(val);
 }
-template <class Type, class Alloc>
-size_t ft::vector<Type, Alloc>::capacity() const {
 
+template <class Type, class Alloc>
+typename ft::vector<Type, Alloc>::size_type ft::vector<Type, Alloc>::capacity() const {
+    return this->_capacity;
 }
 
-
-
-
-
-
+template <class Type, class Alloc>
+bool ft::vector<Type, Alloc>::empty() const {
+    return this->_size == 0;
+}
 
 template <class Type, class Alloc>
 void ft::vector<Type, Alloc>::push_back(const value_type& val) {
     this->_size++;
+    this->_capacity++;
     Node<Type>* tmp = this->_nodeAllocator.allocate(1);
     this->_nodeAllocator.construct(tmp, val);
     if (this->_size == 1)
@@ -252,6 +255,7 @@ void ft::vector<Type, Alloc>::push_back(const value_type& val) {
 template <class Type, class Alloc>
 void ft::vector<Type, Alloc>::pop_back() {
     this->_size--;
+    this->_capacity--;
     Node<Type>* tmp = this->_tail->prev;
 
     tmp->next = this->_empty;
@@ -260,17 +264,25 @@ void ft::vector<Type, Alloc>::pop_back() {
     this->_tail = tmp;
 }
 
-////     OVERLOADS    ////
+// Requests that the vector capacity be at least enough to contain n elements.
+template <class Type, class Alloc>
+void ft::vector<Type, Alloc>::reserve(size_type n) {
+    if (n <= this->_capacity)
+        return ;
+    if (n > this->max_size())
+        throw std::length_error("vector size limit");
+    // do reservation
 
+}
+
+////     OVERLOADS    ////
 
 template <class Type, class Alloc>
 ft::vector<Type, Alloc>& ft::vector<Type, Alloc>::operator=(vector const& vector) {
-    this->_head = vector._head;
-    this->_tail = vector._tail;
-    this->_empty = vector._empty;
-    this->_size = vector._size;
-    this->_allocatorType = vector._allocatorType;
-    this->_nodeAllocator = vector._nodeAllocator;
+//    this->clear();
+//    this->insert(this->begin(), list.begin(), list.end());
+//    this->_allocatorType = list._allocatorType;
+//    this->_nodeAllocator = list._nodeAllocator;
     return *this;
 }
 

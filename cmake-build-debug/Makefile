@@ -129,6 +129,46 @@ depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named ft_containers
+
+# Build rule for target.
+ft_containers: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ft_containers
+.PHONY : ft_containers
+
+# fast build rule for target.
+ft_containers/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/build
+.PHONY : ft_containers/fast
+
+mainVector.o: mainVector.cpp.o
+
+.PHONY : mainVector.o
+
+# target to build an object file
+mainVector.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainVector.cpp.o
+.PHONY : mainVector.cpp.o
+
+mainVector.i: mainVector.cpp.i
+
+.PHONY : mainVector.i
+
+# target to preprocess a source file
+mainVector.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainVector.cpp.i
+.PHONY : mainVector.cpp.i
+
+mainVector.s: mainVector.cpp.s
+
+.PHONY : mainVector.s
+
+# target to generate assembly for a file
+mainVector.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainVector.cpp.s
+.PHONY : mainVector.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -137,6 +177,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... ft_containers"
+	@echo "... mainVector.o"
+	@echo "... mainVector.i"
+	@echo "... mainVector.s"
 .PHONY : help
 
 

@@ -6,19 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/Users/marie/Desktop/ft_containers/Node.hpp
+/Users/lbagg/Desktop/ft_containers/Node.hpp
 
-/Users/marie/Desktop/ft_containers/list.hpp
+/Users/lbagg/Desktop/ft_containers/mainVector.cpp
+vector.hpp
+/Users/lbagg/Desktop/ft_containers/vector.hpp
+vector
+-
+
+/Users/lbagg/Desktop/ft_containers/vector.hpp
 iostream
 -
 Node.hpp
-/Users/marie/Desktop/ft_containers/Node.hpp
-
-/Users/marie/Desktop/ft_containers/mainList.cpp
-list.hpp
-/Users/marie/Desktop/ft_containers/list.hpp
-list
--
-cmath
--
+/Users/lbagg/Desktop/ft_containers/Node.hpp
 

@@ -1,1 +1,4 @@
-CMakeLists.txt not found in /Users/lbagg/Desktop/ft_containers Select CMakeLists.txt
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/lbagg/Desktop/ft_containers
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/lbagg/Desktop/ft_containers/cmake-build-debug
