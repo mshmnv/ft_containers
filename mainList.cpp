@@ -1,6 +1,7 @@
 #include "list.hpp"
 #include <list>
 #include <cmath>
+#include <time.h>
 
 // FOR REMOVE_IF
 bool single_digit(const int& value) { return (value<10); }
@@ -12,6 +13,17 @@ struct is_near{ bool operator()(double first, double second) { return (fabs(firs
 
 // FOR MERGE
 bool mycomparison(double first, double second) { return ( int(first)<int(second) ); }
+
+// FOR SORT
+bool compare_nocase(const std::string& first, const std::string& second) {
+    unsigned int i = 0;
+    while ((i < first.length()) && (i < second.length())) {
+        if (tolower(first[i]) < tolower(second[i])) return true;
+        else if (tolower(first[i]) > tolower(second[i])) return false;
+        ++i;
+    }
+    return (first.length() < second.length());
+}
 
 int main() {
 	std::list<int>::iterator ite;
@@ -238,7 +250,7 @@ int main() {
 	ft_r_ite = list3.rend();
 	for (ft_r_it = list3.rbegin(); ft_r_it != ft_r_ite; ft_r_it++)
 		std::cout << *ft_r_it << " ";
-	std::cout << std::endl << std::endl;;
+	std::cout << std::endl << std::endl;
 
 	std::cout << "STD: ";
 	std::list<int>::const_reverse_iterator cr_ite;
@@ -1015,28 +1027,87 @@ int main() {
 		std::cout << *ft_dit << " ";
 	std::cout << std::endl;
 
-	std::cout << std::endl << " -- COMPARISON OVERLOADS -- " << std::endl << std::endl;
-    std::list<int> a;
-    std::list<int> b;
-    std::list<int> c;
 
-    ft::list<int> ft_a;
-    ft::list<int> ft_b;
-    ft::list<int> ft_c;
-    for (int i = 0; i < 3; i++) {
-        a.push_back(i * 10);  ft_a.push_back(i * 10);
-        b.push_back(i);           ft_b.push_back(i);
-        ft_c.push_back(i * 10);
+	std::list<std::string> strList;
+	strList.push_back("one");
+    strList.push_back("two");
+    strList.push_back("Three");
+    strList.sort();
+    std::list<std::string>::iterator sit;
+    std::list<std::string>::iterator site;
+    std::cout << "STD: ";
+    sit = strList.begin();
+    for (site = strList.end(); sit != site; sit++)
+        std::cout << *sit << " ";
+    std::cout << "| ";
+    strList.sort(compare_nocase);
+    sit = strList.begin();
+    for (site = strList.end(); sit != site; sit++)
+        std::cout << *sit << " ";
+    std::cout << std::endl << "FT:  ";
+
+
+//    ft::list<std::string> ft_strList;
+//    ft_strList.push_back("one");
+//    ft_strList.push_back("two");
+//    ft_strList.push_back("three");
+//    ft_strList.sort();
+//    ft::list<std::string>::iterator ft_sit;
+//    ft::list<std::string>::iterator ft_site;
+//    ft_sit = ft_strList.begin();
+//    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
+//        std::cout << *ft_sit << " ";
+//    std::cout << "| ";
+//    ft_strList.sort(compare_nocase);
+//    ft_sit = ft_strList.begin();
+//    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
+//        std::cout << *ft_sit << " ";
+    std::cout << std::endl;
+
+    std::list<int> bigList;
+    for (int i = 0; i < 1000000; i++) {
+        bigList.push_back(rand() % 1000);
     }
-    c = a;
-//todo fix operator=    ft_c = ft_a; !malloc should I allocate the same fields for list
+    std::cout << "STD ";
+    unsigned int startTime = clock();
+    bigList.sort();
+    unsigned int endTime = clock();
+    std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
 
-    std::cout << std::boolalpha << "STD " << (a==b) << "\tFT " << (ft_a==ft_b) << std::endl;
-    std::cout << std::boolalpha << "STD " << (a!=b) << "\tFT " << (ft_a!=ft_b) << std::endl;
-    std::cout << std::boolalpha << "STD " << (b>c) << "\tFT " << (ft_b>ft_c) << std::endl;
-    std::cout << std::boolalpha << "STD " << (c>b) << "\tFT " << (ft_c>ft_b) << std::endl;
-    std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
-    std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
+    ft::list<int> ft_bigList;
+    for (int i = 0; i < 1000000; i++) {
+        ft_bigList.push_back(rand() % 1000);
+    }
+    std::cout << "FT  ";
+    startTime = clock();
+    ft_bigList.sort();
+    endTime = clock();
+    std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
+
+
+
+//	std::cout << std::endl << " -- COMPARISON OVERLOADS -- " << std::endl << std::endl;
+//    std::list<int> a;
+//    std::list<int> b;
+//    std::list<int> c;
+//
+//    ft::list<int> ft_a;
+//    ft::list<int> ft_b;
+//    ft::list<int> ft_c;
+//    for (int i = 0; i < 3; i++) {
+//        a.push_back(i * 10);  ft_a.push_back(i * 10);
+//        b.push_back(i);           ft_b.push_back(i);
+//        ft_c.push_back(i * 10);
+//    }
+//    c = a;
+//// todo fix operator=    ft_c = ft_a; !malloc should I allocate the same fields for list
+//
+//    std::cout << std::boolalpha << "STD " << (a==b) << "\tFT " << (ft_a==ft_b) << std::endl;
+//    std::cout << std::boolalpha << "STD " << (a!=b) << "\tFT " << (ft_a!=ft_b) << std::endl;
+//    std::cout << std::boolalpha << "STD " << (b>c) << "\tFT " << (ft_b>ft_c) << std::endl;
+//    std::cout << std::boolalpha << "STD " << (c>b) << "\tFT " << (ft_c>ft_b) << std::endl;
+//    std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
+//    std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
 
     return 0;
 }
