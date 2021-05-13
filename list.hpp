@@ -384,7 +384,6 @@ typename ft::list<Type, Alloc>::iterator ft::list<Type, Alloc>::erase(iterator p
 
 template <class Type, class Alloc>
 typename ft::list<Type, Alloc>::iterator ft::list<Type, Alloc>::erase(iterator first, iterator last) {
-	int i = 0;
 	iterator tmp;
 	while (first != last) {
 		first = erase(first);

@@ -37,6 +37,8 @@ int main() {
 	std::list<int> stdList4;
 	ft::list<int> list4;
 
+
+
 	std::cout << std::endl << " -- FRONT -- BACK -- " << std::endl << std::endl;
 
 	std::cout << "STD: " << stdList1.front() << " | " << stdList1.back() << std::endl;
@@ -89,21 +91,27 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
 
-	std::cout << std::endl << " -- EMPTY -- " << std::endl << std::endl;
 
+
+	std::cout << std::endl << " -- EMPTY -- " << std::endl << std::endl;
 	std::cout << "STD: " << std::boolalpha << stdList3.empty() << " | " << stdList1.empty() << std::endl;
 	std::cout << "FT:  " << std::boolalpha << list3.empty() << " | " << list1.empty() << std::endl << std::endl;
+
+
 
 	std::cout << std::endl << " -- SIZE -- " << std::endl << std::endl;
 	std::cout << "STD: " << std::boolalpha << stdList3.size() << " | " << stdList1.size() << std::endl;
 	std::cout << "FT:  " << std::boolalpha << list3.size() << " | " << list1.size() << std::endl << std::endl;
 
+
+
 	std::cout << std::endl << " -- MAX_SIZE -- " << std::endl << std::endl;
 	std::cout << "STD: " << std::boolalpha << stdList3.max_size() << " | " << stdList1.max_size() << std::endl;
 	std::cout << "FT:  " << std::boolalpha << list3.max_size() << " | " << list1.max_size() << std::endl << std::endl;
 
-	std::cout << std::endl << " -- ASSIGN -- " << std::endl << std::endl;
 
+
+	std::cout << std::endl << " -- ASSIGN -- " << std::endl << std::endl;
 	stdList3.assign(3, 9);
 	std::cout << "STD: " << stdList3.size() << " | " << stdList3.front() << " | " << stdList3.back() << " | ";
 	ite = stdList3.end();
@@ -137,8 +145,8 @@ int main() {
 	std::cout << std::endl;
 
 
-	std::cout << std::endl << " -- PUSH_BACK -- " << std::endl << std::endl;
 
+	std::cout << std::endl << " -- PUSH_BACK -- " << std::endl << std::endl;
 	stdList3.clear();
 	stdList3.push_back(1);
 	stdList3.push_back(2);
@@ -162,9 +170,8 @@ int main() {
 	std::cout << std::endl;
 
 
+
 	std::cout << std::endl << " -- POP_FRONT -- " << std::endl << std::endl;
-
-
 	stdList3.pop_front();
 	std::cout << "STD: " << stdList3.size() << " | " << stdList3.front() << " | " << stdList3.back() << " | ";
 	ite = stdList3.end();
@@ -178,8 +185,9 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
 
-	std::cout << std::endl << " -- POP_BACK -- " << std::endl << std::endl;
 
+
+	std::cout << std::endl << " -- POP_BACK -- " << std::endl << std::endl;
 	stdList3.pop_back();
 	std::cout << "STD: " << stdList3.size() << " | " << stdList3.front() << " | " << stdList3.back() << " | ";
 	ite = stdList3.end();
@@ -194,8 +202,8 @@ int main() {
 	std::cout << std::endl;
 
 
-	std::cout << std::endl << " -- PUSH_FRONT -- " << std::endl << std::endl;
 
+	std::cout << std::endl << " -- PUSH_FRONT -- " << std::endl << std::endl;
 	stdList3.push_front(100);
 	std::cout << "STD: " << stdList3.size() << " | " << stdList3.front() << " | " << stdList3.back() << " | ";
 	ite = stdList3.end();
@@ -210,8 +218,8 @@ int main() {
 	std::cout << std::endl;
 	
 
-	std::cout << std::endl << " -- ITERATORS -- " << std::endl << std::endl;
 
+	std::cout << std::endl << " -- ITERATORS -- " << std::endl << std::endl;
 	std::cout << "STD: ";
 	ite = stdList3.end();
 	for (it = stdList3.begin(); it != ite; it++)
@@ -266,9 +274,9 @@ int main() {
 		std::cout << *ft_cr_it << " ";
 	std::cout << std::endl << std::endl;
 
+
+
 	std::cout << std::endl << " -- INSERT -- " << std::endl << std::endl;
-
-
 	stdList4.insert(stdList4.begin(), 4);
 	stdList4.insert(stdList4.begin(), 3);
 	stdList4.insert(stdList4.begin(), 1);
@@ -367,8 +375,8 @@ int main() {
 	std::cout << std::endl << std::endl;
 
 
-	std::cout << std::endl << " -- INSERT W/ ITERATORS -- " << std::endl << std::endl;
 
+	std::cout << std::endl << " -- INSERT W/ ITERATORS -- " << std::endl << std::endl;
 	it = stdList4.begin();
 	it++;
 	it++;
@@ -398,8 +406,9 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
 
-	std::cout << std::endl << " -- SWAP -- " << std::endl << std::endl;
 
+
+	std::cout << std::endl << " -- SWAP -- " << std::endl << std::endl;
 	std::list<int> first(5, 100);
 	std::list<int> second(4, 200);
 	first.swap(second);
@@ -452,12 +461,13 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl << std::endl;
 
-	std::cout << std::endl << " -- RESIZE -- " << std::endl << std::endl;
 
+
+	std::cout << std::endl << " -- RESIZE -- " << std::endl << std::endl;
 	std::list<int> stdList5;
 	for (int i = 0; i < 10; i++)
 		stdList5.push_back(i);
-	stdList5.resize(5, 100);
+	stdList5.resize(5);
 	stdList5.resize(15, 100);
 	// stdList5.resize(1, 100);
 	std::cout << "STD: ";
@@ -469,7 +479,7 @@ int main() {
 	ft::list<int> list5;
 	for (int i = 0; i < 10; i++)
 		list5.push_back(i);
-	list5.resize(5, 100);
+	list5.resize(5);
 	list5.resize(15, 100);
 	// list5.resize(1, 100);
 	ft_ite = list5.end();
@@ -477,8 +487,9 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl << std::endl;
 
-	std::cout << std::endl << " -- ERASE -- " << std::endl << std::endl;
 
+
+	std::cout << std::endl << " -- ERASE -- " << std::endl << std::endl;
 
 	stdList4.erase(++stdList4.begin());
 	stdList4.erase(stdList4.begin());
@@ -504,7 +515,6 @@ int main() {
 		std::cout << *it << " ";
 	std::cout << "|" << std::endl << "FT:  ";
 
-
 	list4.erase(++list4.begin());
 	list4.erase(list4.begin());
 	list4.erase(--list4.end());
@@ -529,6 +539,8 @@ int main() {
 		std::cout << *ft_it << " ";
 	}
 	std::cout << "| " << std::endl;
+
+
 
 	std::cout << std::endl << " -- SPLICE -- " << std::endl << std::endl;
 
@@ -706,6 +718,8 @@ int main() {
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
 
+
+
 	std::cout << std::endl << " -- REMOVE -- " << std::endl << std::endl;
 
 	stdEmpty.push_back(1);
@@ -727,6 +741,8 @@ int main() {
 	for (ft_it = ftEmpty.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
+
+
 
 	std::cout << std::endl << " -- REMOVE_IF -- " << std::endl << std::endl;
 	std::cout << "STD: ";
@@ -751,6 +767,8 @@ int main() {
 	for (ft_it = list4.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
+
+
 
 	std::cout << std::endl << " -- UNIQUE -- " << std::endl << std::endl;
 
@@ -847,6 +865,8 @@ int main() {
 	for (ft_dit = ftDouble.begin(); ft_dit != ft_dite; ft_dit++)
 		std::cout << *ft_dit << " ";
 	std::cout << std::endl << std::endl;
+
+
 
 	std::cout << std::endl << " -- MERGE -- " << std::endl << std::endl;
 	std::list<int> stdMerge1;
@@ -961,6 +981,8 @@ int main() {
 		std::cout << *ft_dit << " ";
 	std::cout << "| " << std::endl;
 
+
+
 	std::cout << std::endl << " -- REVERSE -- " << std::endl << std::endl;
 	stdEmpty.push_back(1);
 	stdEmpty.push_back(2);
@@ -990,6 +1012,8 @@ int main() {
 	for (ft_it = ftEmpty.begin(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
+
+
 
 	std::cout << std::endl << " -- SORT -- " << std::endl << std::endl;
 
@@ -1046,68 +1070,65 @@ int main() {
         std::cout << *sit << " ";
     std::cout << std::endl << "FT:  ";
 
-
-//    ft::list<std::string> ft_strList;
-//    ft_strList.push_back("one");
-//    ft_strList.push_back("two");
-//    ft_strList.push_back("three");
-//    ft_strList.sort();
-//    ft::list<std::string>::iterator ft_sit;
-//    ft::list<std::string>::iterator ft_site;
-//    ft_sit = ft_strList.begin();
-//    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
-//        std::cout << *ft_sit << " ";
-//    std::cout << "| ";
-//    ft_strList.sort(compare_nocase);
-//    ft_sit = ft_strList.begin();
-//    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
-//        std::cout << *ft_sit << " ";
+    ft::list<std::string> ft_strList;
+    ft_strList.push_back("one");
+    ft_strList.push_back("two");
+    ft_strList.push_back("Three");
+    ft_strList.sort();
+    ft::list<std::string>::iterator ft_sit;
+    ft::list<std::string>::iterator ft_site;
+    ft_sit = ft_strList.begin();
+    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
+        std::cout << *ft_sit << " ";
+    std::cout << "| ";
+    ft_strList.sort(compare_nocase);
+    ft_sit = ft_strList.begin();
+    for (ft_site = ft_strList.end(); ft_sit != ft_site; ft_sit++)
+        std::cout << *ft_sit << " ";
     std::cout << std::endl;
 
+
     std::list<int> bigList;
+    ft::list<int> ft_bigList;
+
     for (int i = 0; i < 1000000; i++) {
         bigList.push_back(rand() % 1000);
+        ft_bigList.push_back(rand() % 1000);
     }
     std::cout << "STD ";
     unsigned int startTime = clock();
     bigList.sort();
     unsigned int endTime = clock();
     std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
-
-    ft::list<int> ft_bigList;
-    for (int i = 0; i < 1000000; i++) {
-        ft_bigList.push_back(rand() % 1000);
-    }
     std::cout << "FT  ";
     startTime = clock();
-    ft_bigList.sort();
+//    ft_bigList.sort();
     endTime = clock();
     std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
 
 
 
-//	std::cout << std::endl << " -- COMPARISON OVERLOADS -- " << std::endl << std::endl;
-//    std::list<int> a;
-//    std::list<int> b;
-//    std::list<int> c;
-//
-//    ft::list<int> ft_a;
-//    ft::list<int> ft_b;
-//    ft::list<int> ft_c;
-//    for (int i = 0; i < 3; i++) {
-//        a.push_back(i * 10);  ft_a.push_back(i * 10);
-//        b.push_back(i);           ft_b.push_back(i);
-//        ft_c.push_back(i * 10);
-//    }
-//    c = a;
-//// todo fix operator=    ft_c = ft_a; !malloc should I allocate the same fields for list
-//
-//    std::cout << std::boolalpha << "STD " << (a==b) << "\tFT " << (ft_a==ft_b) << std::endl;
-//    std::cout << std::boolalpha << "STD " << (a!=b) << "\tFT " << (ft_a!=ft_b) << std::endl;
-//    std::cout << std::boolalpha << "STD " << (b>c) << "\tFT " << (ft_b>ft_c) << std::endl;
-//    std::cout << std::boolalpha << "STD " << (c>b) << "\tFT " << (ft_c>ft_b) << std::endl;
-//    std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
-//    std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
+	std::cout << std::endl << " -- COMPARISON OVERLOADS -- " << std::endl << std::endl;
+    std::list<int> a;
+    std::list<int> b;
+    std::list<int> c;
 
+    ft::list<int> ft_a;
+    ft::list<int> ft_b;
+    ft::list<int> ft_c;
+    for (int i = 0; i < 3; i++) {
+        a.push_back(i * 10);    ft_a.push_back(i * 10);
+        b.push_back(i);             ft_b.push_back(i);
+    }
+    c = a; ft_c = ft_a;
+    std::cout << std::boolalpha << "STD " << (a==b) << "\tFT " << (ft_a==ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (a!=b) << "\tFT " << (ft_a!=ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (b>c) << "\tFT " << (ft_b>ft_c) << std::endl;
+    std::cout << std::boolalpha << "STD " << (c>b) << "\tFT " << (ft_c>ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
+    std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
+
+//    while (1)
+//        ;
     return 0;
 }
