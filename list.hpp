@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Node.hpp"
 
+//todo leaks in operator=, leaks in sort
+
 namespace ft {
 	template <class Type, class Alloc = std::allocator<Type> >
 	class list {
@@ -50,7 +52,6 @@ namespace ft {
 				iterator() : _curNode(NULL) {}
 				iterator(Node<Type> *other) : _curNode(other) {}
 				iterator(iterator  const &other) { this->_curNode = other._curNode; }
-				Type& getData() const { return _curNode->getData(); }
 				iterator& operator++() { this->_curNode = this->_curNode->next; return *this; }
 				iterator& operator--() { this->_curNode = this->_curNode->prev; return *this; }
 				iterator& operator++(int) { ++(*this); return *this; }
@@ -76,7 +77,6 @@ namespace ft {
 				reverse_iterator() : _curNode(NULL) {}
 				reverse_iterator(Node<Type> *other) : _curNode(other) {}
 				reverse_iterator(reverse_iterator const &other) { this->_curNode = other._curNode; }
-				Type& getData() const { return _curNode->getData(); }
 				reverse_iterator& operator++() { this->_curNode = this->_curNode->prev; return *this; }
 				reverse_iterator& operator--() { this->_curNode = this->_curNode->next; return *this; }
 				reverse_iterator& operator++(int) { ++(*this); return *this; }
@@ -126,7 +126,7 @@ namespace ft {
 			iterator erase(iterator);
 			iterator erase(iterator, iterator);
 			void swap(list&);
-			void resize(size_t, Type);
+			void resize(size_t, Type = value_type());
 			void clear();
 
 			void splice(iterator, list&);
@@ -171,7 +171,7 @@ namespace ft {
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc), _size(0){
 	this->_empty = this->_nodeAllocator.allocate(1);
-	this->_nodeAllocator.construct(this->_empty, 0);
+//	this->_nodeAllocator.construct(this->_empty, 0);
 	this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
@@ -183,7 +183,7 @@ ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc)
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(int count, const Type& data, const allocator_type& alloc) : _allocatorType(alloc), _size(0) {
 	this->_empty = this->_nodeAllocator.allocate(1);
-    this->_nodeAllocator.construct(this->_empty, 0);
+//    this->_nodeAllocator.construct(this->_empty, 0);
     this->_head = this->_empty;
 	this->_tail = this->_empty;
 	for (int i = 0; i < count; i++)
@@ -196,7 +196,7 @@ ft::list<Type, Alloc>::list (InputIterator first, InputIterator last, const allo
 	typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
 	this->_size = 0;
 	this->_empty = this->_nodeAllocator.allocate(1);
-    this->_nodeAllocator.construct(this->_empty, 0);
+//    this->_nodeAllocator.construct(this->_empty, 0);
     this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
@@ -440,7 +440,7 @@ void ft::list<Type, Alloc>::clear() {
             this->_nodeAllocator.deallocate(tmp, 1);
 		}
 		this->_empty = this->_nodeAllocator.allocate(1);
-		this->_nodeAllocator.construct(this->_empty, 0);
+//		this->_nodeAllocator.construct(this->_empty, 0);
 		this->_head = this->_empty;
 		this->_tail = this->_empty;
 		this->_head->next = this->_empty;
