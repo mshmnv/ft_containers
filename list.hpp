@@ -14,8 +14,7 @@ namespace ft {
 			typedef Type value_type;
 			typedef value_type& reference;
 			typedef const value_type& const_reference;
-// todo
-//			typedef size_t size_type;
+			typedef size_t size_type;
             std::allocator<Node<value_type> > _nodeAllocator;
             allocator_type _allocatorType;
 
@@ -145,7 +144,6 @@ namespace ft {
 			template <class Compare>
 				void merge(list& x, Compare comp);
             void reverse();
-// todo sort()
             void sort();
 			template <class Compare>
 				void sort(Compare comp);
@@ -224,6 +222,8 @@ ft::list<Type, Alloc>::~list() {
 		this->_head = this->_head->next;
 		this->_nodeAllocator.deallocate(tmp, 1);
 	}
+    if (this->empty())
+        this->_nodeAllocator.deallocate(this->_empty, 1);
 }
 
 ////    METHODS    ////
@@ -317,7 +317,6 @@ void ft::list<Type, Alloc>::push_back(Type const &data) {
 	tmp->prev = this->_tail;
 	this->_empty->prev = tmp;
 	tmp->next = this->_empty;
-
 	this->_tail = tmp;
 }
 
@@ -393,16 +392,26 @@ typename ft::list<Type, Alloc>::iterator ft::list<Type, Alloc>::erase(iterator f
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::swap(list& x) {
-	Node<Type> *tmpHead = x._head;
-	Node<Type> *tmpTail = x._tail;
-	Node<Type> *tmpEmpty = x._empty;
-    size_t tmpSize = x._size;
+    Node<Type> *tmpHead = x._head;
+    Node<Type> *tmpTail = x._tail;
+    Node<Type> *tmpEmpty = x._empty;
+    size_type tmpSize = x._size;
+    allocator_type tmpAT = x._allocatorType;
+    std::allocator<Node<value_type> > tmpAlloc = x._nodeAllocator;
 
-	x = *this;
-	this->_head = tmpHead;
-	this->_tail = tmpTail;
-	this->_empty = tmpEmpty;
-	this->_size = tmpSize;
+    x._head = this->_head;
+    x._tail = this->_tail;
+    x._empty = this->_empty;
+    x._size = this->_size;
+    x._allocatorType = this->_allocatorType;
+    x._nodeAllocator = this->_nodeAllocator;
+
+    this->_head = tmpHead;
+    this->_tail = tmpTail;
+    this->_empty = tmpEmpty;
+    this->_size = tmpSize;
+    this->_allocatorType = tmpAT;
+    this->_nodeAllocator = tmpAlloc;
 }
 
 template <class Type, class Alloc>
@@ -623,23 +632,25 @@ void	ft::list<Type, Alloc>::merge(list& x, Compare comp) {
 template <class Type, class Alloc>
 void	ft::list<Type, Alloc>::sort() {
     if (this->_size > 1) {
-        list<Type> less;
-        list<Type> more;
+        ft::list<Type> *less = new ft::list<Type>;
+        ft::list<Type> *more = new ft::list<Type>;
         Node<Type> *base = this->_head;
 
         Node<Type> *right = this->_head->next;
         for (Node<Type> *left = this->_tail->next; right != left;) {
             Node<Type> *tmp = right->next;
             if (right->getData() <= base->getData())
-                less.splice(less.end(), *this, iterator(right));
+                less->splice(less->end(), *this, iterator(right));
             else
-                more.splice(more.end(), *this, iterator(right));
+                more->splice(more->end(), *this, iterator(right));
             right = tmp;
         }
-        less.sort();
-        more.sort();
-        this->splice(this->begin(), less);
-        this->splice(this->end(), more);
+        less->sort();
+        more->sort();
+        this->splice(this->begin(), *less);
+        this->splice(this->end(), *more);
+        delete less;
+        delete more;
     }
 }
 
@@ -647,23 +658,25 @@ template <class Type, class Alloc>
 template <class Compare>
 void	ft::list<Type, Alloc>::sort(Compare comp) {
     if (this->_size > 1) {
-        list<Type> less;
-        list<Type> more;
+        ft::list<Type> *less = new ft::list<Type>;
+        ft::list<Type> *more = new ft::list<Type>;
         Node<Type> *base = this->_head;
 
         Node<Type> *right = this->_head->next;
         for (Node<Type> *left = this->_tail->next; right != left;) {
             Node<Type> *tmp = right->next;
             if (comp(right->getData(), base->getData()))
-                less.splice(less.end(), *this, iterator(right));
+                less->splice(less->end(), *this, iterator(right));
             else
-                more.splice(more.end(), *this, iterator(right));
+                more->splice(more->end(), *this, iterator(right));
             right = tmp;
         }
-        less.sort();
-        more.sort();
-        this->splice(this->begin(), less);
-        this->splice(this->end(), more);
+        less->sort();
+        more->sort();
+        this->splice(this->begin(), *less);
+        this->splice(this->end(), *more);
+        delete less;
+        delete more;
     }
 }
 
@@ -706,10 +719,8 @@ void	ft::list<Type, Alloc>::reverse() {
 
 template <class Type, class Alloc>
 ft::list<Type, Alloc>& ft::list<Type, Alloc>::operator=(list const& list) {
-    this->_head = list._head;
-    this->_tail = list._tail;
-    this->_empty = list._empty;
-    this->_size = list._size;
+    this->clear();
+    this->insert(this->begin(), list.begin(), list.end());
     this->_allocatorType = list._allocatorType;
     this->_nodeAllocator = list._nodeAllocator;
     return *this;
