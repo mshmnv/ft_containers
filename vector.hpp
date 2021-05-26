@@ -3,6 +3,13 @@
 
 #include <iostream>
 
+//todo
+// more allocation
+// relational operators
+// swap
+// vector<bool>
+// ?leaks
+
 namespace ft {
     template <class Type, class Alloc = std::allocator<Type> >
     class vector {
@@ -158,7 +165,7 @@ ft::vector<Type, Alloc>::vector(size_type n, const value_type& val, const alloca
 template <class Type, class Alloc>
 template <class InputIterator>
 ft::vector<Type, Alloc>::vector(InputIterator first, InputIterator last, const allocator_type& alloc,
-    typename ft::vector<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) :
+                                typename ft::vector<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) :
     _allocatorType(alloc), _size(0), _capacity(0), _arr(NULL) {
 	this->insert(this->begin(), first, last);
 }
@@ -259,12 +266,15 @@ typename ft::vector<Type, Alloc>::const_reference ft::vector<Type, Alloc>::front
 
 template <class Type, class Alloc>
 template <class InputIterator>
-void ft::vector<Type, Alloc>::assign(InputIterator first, InputIterator last, typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
-
+void ft::vector<Type, Alloc>::assign(InputIterator first, InputIterator last,
+                                     typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
+    clear();
+    insert(this->begin(), first, last);
 }
 template <class Type, class Alloc>
 void ft::vector<Type, Alloc>::assign(size_type n, const value_type& val) {
-
+    clear();
+    insert(this->begin(), n, val);
 }
 
 template <class Type, class Alloc>
@@ -317,39 +327,58 @@ void ft::vector<Type, Alloc>::insert(iterator position, InputIterator first, Inp
 }
 
 template <class Type, class Alloc>
-void ft::vector<Type, Alloc>::clear() {
-	erase(this->begin(), this->end());
-//	    this->_allocator.deallocate(this->_arr, this->_capacity);
-
-//	for (int i = 0; i < this->_size; i++)
-//		this->_allocator.destroy(&_arr[i]);
-//	this->_capacity = 0;
-//	this->_size = 0;
-}
-
-template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::iterator ft::vector<Type, Alloc>::erase(iterator position) {
-	return erase(position, position + 1);
+    return erase(position, position + 1);
 }
 
 // last - is not deleted
 template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::iterator ft::vector<Type, Alloc>::erase(iterator first, iterator last){
-	size_t ind = first._arr - _arr;
-	size_t last_ind = last._arr - _arr;
-	size_t n = last_ind - ind;
-	if (n < 1)
-		return last;
-	for (; ind < last_ind; ind++) {
-		this->_allocator.destroy(&this->_arr[ind]);
-	}
-	for (ind = last_ind; ind < this->_size; ind++) {
-		this->_allocator.construct(&this->_arr[ind - n], this->_arr[ind]);
-		this->_allocator.destroy(&this->_arr[ind]);
-	}
-	this->_size -= n;
-	return last;
+    size_t ind = first._arr - _arr;
+    size_t last_ind = last._arr - _arr;
+    size_t n = last_ind - ind;
+    if (n < 1)
+        return last;
+    for (; ind < last_ind; ind++) {
+        this->_allocator.destroy(&this->_arr[ind]);
+    }
+    for (ind = last_ind; ind < this->_size; ind++) {
+        this->_allocator.construct(&this->_arr[ind - n], this->_arr[ind]);
+        this->_allocator.destroy(&this->_arr[ind]);
+    }
+    this->_size -= n;
+    return last;
 }
+
+template <class Type, class Alloc>
+void ft::vector<Type, Alloc>::swap(vector& x) {
+    Type* tmpArr = x._arr;
+    size_type tmpSize = x._size;
+    size_type tmpCap = x._capacity;
+    allocator_type tmpAT = x._allocatorType;
+    std::allocator<value_type> tmpAlloc = x._allocator;
+
+    x._arr = this->_arr;
+    x._size = this->_size;
+    x._capacity = this->_capacity;
+    x._allocatorType = this->_allocatorType;
+    x._allocator = this->_allocator;
+
+    this->_arr = tmpArr;
+    this->_size = tmpSize;
+    this->_capacity = tmpCap;
+    this->_allocatorType = tmpAT;
+    this->_allocator = tmpAlloc;
+}
+
+
+
+template <class Type, class Alloc>
+void ft::vector<Type, Alloc>::clear() {
+	erase(this->begin(), this->end());
+}
+
+
 
 ////     OVERLOADS    ////
 

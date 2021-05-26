@@ -3,7 +3,7 @@
 
 template<class T>
 void printVector(std::vector<T> &vect) {
-	std::cout << "STD: ";
+	std::cout << "STD: " << vect.capacity() << " " << vect.size() << " -> ";
 	for (typename std::vector<T>::iterator it = vect.begin(); it != vect.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
@@ -11,7 +11,7 @@ void printVector(std::vector<T> &vect) {
 
 template<class T>
 void printVector(ft::vector<T> &vect) {
-	std::cout << "FT:  ";
+	std::cout << "FT:  " << vect.capacity() << " " << vect.size() << " -> ";
 	for (typename ft::vector<T>::iterator it = vect.begin(); it != vect.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
@@ -197,31 +197,66 @@ int main(){
 	std::cout << "-- ERASE --" << std::endl;
 	std::vector<int> clVect(10, 6); clVect.push_back(1); clVect.insert(clVect.begin(), 9);
 	ft::vector<int> ft_clVect(10, 6); ft_clVect.push_back(1); ft_clVect.insert(ft_clVect.begin(), 9);
-	std::cout << clVect.size() << "|" << clVect.capacity() << " "; printVector(clVect);
-	std::cout << ft_clVect.size() << "|" << ft_clVect.capacity() << " "; printVector(ft_clVect);
+	printVector(clVect);
+	printVector(ft_clVect);
 
 	clVect.erase(clVect.begin());
-	std::cout << clVect.size() << "|" << clVect.capacity() << " "; printVector(clVect);
+	printVector(clVect);
 	ft_clVect.erase(ft_clVect.begin());
-	std::cout << ft_clVect.size() << "|" << ft_clVect.capacity() << " "; printVector(ft_clVect);
+	printVector(ft_clVect);
 
 	clVect.erase(++clVect.begin(), --clVect.end());
-	std::cout << clVect.size() << "|" << clVect.capacity() << " "; printVector(clVect);
+	printVector(clVect);
 	ft_clVect.erase(++ft_clVect.begin(), --ft_clVect.end());
-	std::cout << ft_clVect.size() << "|" << ft_clVect.capacity() << " "; printVector(ft_clVect);
+	printVector(ft_clVect);
 	std::cout << std::endl << std::endl;
 
 	std::cout << "-- CLEAR --" << std::endl;
 	printVector(clVect);
 	printVector(ft_clVect);
 	clVect.clear();
-	std::cout << clVect.size() << "|" << clVect.capacity() << " "; printVector(clVect);
+	printVector(clVect);
 	ft_clVect.clear();
-	std::cout << ft_clVect.size() << "|" << ft_clVect.capacity() << " "; printVector(ft_clVect);
+	printVector(ft_clVect);
 	std::cout << std::endl << std::endl;
 
 	std::cout << "-- ASSIGN --" << std::endl;
+	atVect.assign(insVect.begin(), --insVect.end());
+    printVector(atVect);
+    ft_atVect.assign(ft_insVect.begin(), --ft_insVect.end());
+    printVector(ft_atVect);
 
+    atVect.assign(30, 99);
+    printVector(atVect);
+    ft_atVect.assign(30, 99);
+    printVector(ft_atVect);
+    std::cout << std::endl << std::endl;
+
+
+    std::cout << "-- SWAP --" << std::endl;
+    std::cout << "   >>> before >>>" << std::endl;
+    printVector(vect);
+    printVector(ft_vect);
+    printVector(vect0);
+    printVector(ft_vect0);
+    printVector(empt);
+    printVector(ft_empt);
+
+    vect.swap(vect0);
+    ft_vect.swap(ft_vect0);
+    std::cout << "   >>> after >>>" << std::endl;
+    printVector(vect);
+    printVector(ft_vect);
+    printVector(vect0);
+    printVector(ft_vect0);
+
+    vect.swap(empt);
+    ft_vect.swap(ft_empt);
+    std::cout << "   >>> with empty >>>" << std::endl;
+    printVector(vect);
+    printVector(ft_vect);
+    printVector(empt);
+    printVector(ft_empt);
 
 //	while(1)
 //		;

@@ -4,8 +4,6 @@
 #include <iostream>
 #include "Node.hpp"
 
-//todo leaks in operator=, leaks in sort
-
 namespace ft {
 	template <class Type, class Alloc = std::allocator<Type> >
 	class list {
