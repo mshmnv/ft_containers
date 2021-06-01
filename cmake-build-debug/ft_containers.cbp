@@ -88,7 +88,19 @@
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/list.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
-		<Unit filename="/Users/lbagg/Desktop/ft_containers/mainVector.cpp">
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/mainMap.cpp">
+			<Option target="ft_containers"/>
+		</Unit>
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/mainQueue.cpp">
+			<Option target="ft_containers"/>
+		</Unit>
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/map.hpp">
+			<Option target="ft_containers"/>
+		</Unit>
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/queue.hpp">
+			<Option target="ft_containers"/>
+		</Unit>
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/stack.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/vector.hpp">

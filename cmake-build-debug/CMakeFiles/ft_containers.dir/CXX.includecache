@@ -6,13 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/Users/lbagg/Desktop/ft_containers/mainVector.cpp
-vector.hpp
-/Users/lbagg/Desktop/ft_containers/vector.hpp
-vector
+/Users/lbagg/Desktop/ft_containers/mainQueue.cpp
+queue.hpp
+/Users/lbagg/Desktop/ft_containers/queue.hpp
+queue
+-
+deque
 -
 
-/Users/lbagg/Desktop/ft_containers/vector.hpp
+/Users/lbagg/Desktop/ft_containers/queue.hpp
 iostream
+-
+deque
 -
 

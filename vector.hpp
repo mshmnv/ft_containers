@@ -4,11 +4,8 @@
 #include <iostream>
 
 //todo
-// more allocation
-// relational operators
-// swap
-// vector<bool>
 // ?leaks
+// ?vector<bool>
 
 namespace ft {
     template <class Type, class Alloc = std::allocator<Type> >
@@ -84,8 +81,8 @@ namespace ft {
             reverse_iterator() : _arr(NULL) {}
             reverse_iterator(Type* other) : _arr(other) {}
             reverse_iterator(reverse_iterator const &other) { this->_arr = other._arr; }
-            reverse_iterator& operator++() { this->arr++; return *this; }
-            reverse_iterator& operator--() { this->_arr--; return *this; }
+            reverse_iterator& operator++() { this->_arr--; return *this; }
+            reverse_iterator& operator--() { this->_arr++; return *this; }
             reverse_iterator& operator++(int) { ++(*this); return *this; }
             reverse_iterator& operator--(int) { --(*this); return *this; }
             bool operator!=(reverse_iterator const &it) { return this->_arr != it._arr; }
@@ -108,10 +105,10 @@ namespace ft {
         const_iterator begin() const { return const_iterator(this->_arr); }
         iterator end() { return iterator(this->_arr + this->_size); }
         const_iterator end() const { return const_iterator(this->_arr + this->_size); }
-        reverse_iterator rbegin() { return reverse_iterator(this->_arr + this->_size); }
-        const_reverse_iterator rbegin() const { return const_reverse_iterator(this->_arr + this->_size); }
-        reverse_iterator rend() { return reverse_iterator(this->_arr); }
-        const_reverse_iterator rend() const { return const_reverse_iterator(this->_arr); }
+        reverse_iterator rbegin() { return reverse_iterator(this->_arr + (this->_size - 1)); }
+        const_reverse_iterator rbegin() const { return const_reverse_iterator(this->_arr + (this->_size - 1)); }
+        reverse_iterator rend() { return reverse_iterator(this->_arr - 1); }
+        const_reverse_iterator rend() const { return const_reverse_iterator(this->_arr - 1); }
 
         ////    METHODS    ////
 
@@ -144,6 +141,8 @@ namespace ft {
 		iterator erase(iterator first, iterator last);
 		void swap(vector& x);
 		void clear();
+
+
 	};
 }
 
@@ -179,9 +178,8 @@ ft::vector<Type, Alloc>::vector(const vector& x) {
 
 template <class Type, class Alloc>
 ft::vector<Type, Alloc>::~vector() {
-    for (int i = 0; i < this->_size; i++)
+    for (int i = 0; i < this->_capacity; i++)
         this->_allocator.destroy(&_arr[i]);
-//    this->_allocator.deallocate(this->_arr, this->_capacity);
 }
 
 ////    METHODS    ////
@@ -279,6 +277,8 @@ void ft::vector<Type, Alloc>::assign(size_type n, const value_type& val) {
 
 template <class Type, class Alloc>
 void ft::vector<Type, Alloc>::push_back(const value_type& val) {
+//    if (this->_size == this->_capacity && this->_size > 1)
+//        reserve(this->_capacity * 2);
 	insert(this->end(), val);
 }
 
@@ -297,9 +297,14 @@ template <class Type, class Alloc>
 void ft::vector<Type, Alloc>::insert(iterator position, size_type n, const value_type& val) {
 	if (n == 0)
 		return;
-	size_type index = position._arr - _arr;
-	reserve(this->_size + n);
-	for (int j = this->_capacity - 1; j > index; j--) {
+	size_type index = position._arr - this->_arr;
+    if (this->_size + n > this->_capacity && this->_size > 1)
+        while (this->_capacity < this->_size + n)
+            reserve(this->_capacity * 2);
+    else
+        reserve(this->_size + n);
+//	for (int j = this->_capacity - 1; j > index; j--) {
+    for (int j = this->_size + n - 1; j > index; j--) {
 		this->_allocator.construct(&this->_arr[j], this->_arr[j - n]);
 		this->_allocator.destroy(&this->_arr[j - n]);
 	}
@@ -316,8 +321,12 @@ void ft::vector<Type, Alloc>::insert(iterator position, InputIterator first, Inp
 	for (iterator tmp = first; tmp != last; tmp++)
 		n++;
 	size_type index = position._arr - _arr;
-	reserve(this->_size + n);
-	for (int j = this->_capacity - 1; j > index; j--) {
+    if (this->_size + n > this->_capacity && this->_size > 1)
+        while (this->_capacity < this->_size + n)
+            reserve(this->_capacity * 2);
+    else
+	    reserve(this->_size + n);
+	for (int j = this->_size + n - 1; j > index; j--) {
 		this->_allocator.construct(&this->_arr[j], this->_arr[j - n]);
 		this->_allocator.destroy(&this->_arr[j - n]);
 	}
@@ -387,7 +396,7 @@ ft::vector<Type, Alloc>& ft::vector<Type, Alloc>::operator=(vector const& vector
     this->clear();
     this->insert(this->begin(), vector.begin(), vector.end());
     this->_allocatorType = vector._allocatorType;
-    this->_nodeAllocator = vector._nodeAllocator;
+    this->_allocator = vector._allocator;
     return *this;
 }
 
@@ -399,6 +408,60 @@ typename ft::vector<Type, Alloc>::reference ft::vector<Type, Alloc>::operator[](
 template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::const_reference ft::vector<Type, Alloc>::operator[](size_type n) const {
 	return this->_arr[n];
+}
+
+////     NON-MEMBER FUNCTIONS    ////
+
+template <class T, class Alloc>
+bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    if (lhs.size() != rhs.size())
+        return false;
+    typename ft::vector<T, Alloc>::iterator lit = lhs.begin();
+    typename ft::vector<T, Alloc>::iterator lite = lhs.end();
+    typename ft::vector<T, Alloc>::iterator rit = rhs.begin();
+    typename ft::vector<T, Alloc>::iterator rite = rhs.end();
+    for (; lit != lite; lit++, rit++)
+        if (*lit != *rit)
+            return false;
+    return true;
+}
+
+template <class T, class Alloc>
+bool operator!=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return !(lhs == rhs);
+}
+
+template <class T, class Alloc>
+bool operator<(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    typename ft::vector<T, Alloc>::iterator lit = lhs.begin();
+    typename ft::vector<T, Alloc>::iterator lite = lhs.end();
+    typename ft::vector<T, Alloc>::iterator rit = rhs.begin();
+    typename ft::vector<T, Alloc>::iterator rite = rhs.end();
+    for (; lit != lite; lit++, rit++)
+        if (*lit > *rit)
+            return false;
+    return true;
+}
+
+template <class T, class Alloc>
+bool operator>(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return !(lhs<rhs);
+}
+
+template <class T, class Alloc>
+bool operator>=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return !(lhs<rhs);
+
+}
+
+template <class T, class Alloc>
+bool operator<=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return !(lhs>rhs);
+}
+
+template <class T, class Alloc>
+void swap(ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y) {
+    x.swap(y);
 }
 
 #endif

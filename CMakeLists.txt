@@ -9,6 +9,9 @@ add_executable(ft_containers
         Node.hpp
         list.hpp
         vector.hpp
+        stack.hpp
+        queue.hpp
 #        mainList.cpp
-        mainVector.cpp
-        )
+#        mainVector.cpp
+#        mainStack.cpp
+        mainQueue.cpp map.hpp mainMap.cpp)

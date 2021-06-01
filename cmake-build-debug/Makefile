@@ -142,32 +142,59 @@ ft_containers/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/build
 .PHONY : ft_containers/fast
 
-mainVector.o: mainVector.cpp.o
+mainMap.o: mainMap.cpp.o
 
-.PHONY : mainVector.o
+.PHONY : mainMap.o
 
 # target to build an object file
-mainVector.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainVector.cpp.o
-.PHONY : mainVector.cpp.o
+mainMap.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainMap.cpp.o
+.PHONY : mainMap.cpp.o
 
-mainVector.i: mainVector.cpp.i
+mainMap.i: mainMap.cpp.i
 
-.PHONY : mainVector.i
+.PHONY : mainMap.i
 
 # target to preprocess a source file
-mainVector.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainVector.cpp.i
-.PHONY : mainVector.cpp.i
+mainMap.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainMap.cpp.i
+.PHONY : mainMap.cpp.i
 
-mainVector.s: mainVector.cpp.s
+mainMap.s: mainMap.cpp.s
 
-.PHONY : mainVector.s
+.PHONY : mainMap.s
 
 # target to generate assembly for a file
-mainVector.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainVector.cpp.s
-.PHONY : mainVector.cpp.s
+mainMap.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainMap.cpp.s
+.PHONY : mainMap.cpp.s
+
+mainQueue.o: mainQueue.cpp.o
+
+.PHONY : mainQueue.o
+
+# target to build an object file
+mainQueue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainQueue.cpp.o
+.PHONY : mainQueue.cpp.o
+
+mainQueue.i: mainQueue.cpp.i
+
+.PHONY : mainQueue.i
+
+# target to preprocess a source file
+mainQueue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainQueue.cpp.i
+.PHONY : mainQueue.cpp.i
+
+mainQueue.s: mainQueue.cpp.s
+
+.PHONY : mainQueue.s
+
+# target to generate assembly for a file
+mainQueue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainQueue.cpp.s
+.PHONY : mainQueue.cpp.s
 
 # Help Target
 help:
@@ -178,9 +205,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ft_containers"
-	@echo "... mainVector.o"
-	@echo "... mainVector.i"
-	@echo "... mainVector.s"
+	@echo "... mainMap.o"
+	@echo "... mainMap.i"
+	@echo "... mainMap.s"
+	@echo "... mainQueue.o"
+	@echo "... mainQueue.i"
+	@echo "... mainQueue.s"
 .PHONY : help
 
 
