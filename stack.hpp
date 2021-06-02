@@ -26,6 +26,13 @@ namespace ft {
         const value_type& top() const { return _cont.back(); }
         void push(const value_type& val) { return _cont.push_back(val); }
         void pop() { _cont.pop_back(); }
+
+        void swap(stack& x) { _cont.swap(x._cont); }
+        friend bool operator>(stack const &lhs, stack const &rhs) { return lhs._cont > rhs._cont; }
+        friend bool operator==(stack const &lhs, stack const &rhs) { return lhs._cont == rhs._cont; }
+        friend bool operator!=(stack const &lhs, stack const &rhs) { return lhs._cont != rhs._cont; }
+        friend bool operator<=(stack const &lhs, stack const &rhs) { return lhs._cont <= rhs._cont; }
+        friend bool operator>=(stack const &lhs, stack const &rhs) { return lhs._cont >= rhs._cont; }
     };
 }
 
@@ -33,37 +40,37 @@ namespace ft {
 
 template <class T, class Container>
 bool operator==(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
-
+    return lhs == rhs;
 }
 
 template <class T, class Container>
 bool operator!=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
-
+    return lhs != rhs;
 }
 
 template <class T, class Container>
 bool operator<(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
-
+    return lhs < rhs;
 }
 
 template <class T, class Container>
 bool operator<=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
-
+    return lhs <= rhs;
 }
 
 template <class T, class Container>
 bool operator>(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
-
+    return lhs > rhs;
 }
 
 template <class T, class Container>
 bool operator>=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs) {
-
+    return lhs >= rhs;
 }
 
 template <class T, class Container>
-void swap (ft::stack<T,Container>& x, ft::stack<T,Container>& y) noexcept(noexcept(x.swap(y))) {
-
+void swap(ft::stack<T,Container>& x, ft::stack<T,Container>& y) noexcept(noexcept(x.swap(y))) {
+    x.swap(y);
 }
 
 #endif

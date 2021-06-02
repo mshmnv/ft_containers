@@ -169,33 +169,6 @@ mainMap.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainMap.cpp.s
 .PHONY : mainMap.cpp.s
 
-mainQueue.o: mainQueue.cpp.o
-
-.PHONY : mainQueue.o
-
-# target to build an object file
-mainQueue.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainQueue.cpp.o
-.PHONY : mainQueue.cpp.o
-
-mainQueue.i: mainQueue.cpp.i
-
-.PHONY : mainQueue.i
-
-# target to preprocess a source file
-mainQueue.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainQueue.cpp.i
-.PHONY : mainQueue.cpp.i
-
-mainQueue.s: mainQueue.cpp.s
-
-.PHONY : mainQueue.s
-
-# target to generate assembly for a file
-mainQueue.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_containers.dir/build.make CMakeFiles/ft_containers.dir/mainQueue.cpp.s
-.PHONY : mainQueue.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -208,9 +181,6 @@ help:
 	@echo "... mainMap.o"
 	@echo "... mainMap.i"
 	@echo "... mainMap.s"
-	@echo "... mainQueue.o"
-	@echo "... mainQueue.i"
-	@echo "... mainQueue.s"
 .PHONY : help
 
 

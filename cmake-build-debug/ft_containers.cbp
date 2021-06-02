@@ -85,16 +85,19 @@
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/Node.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/RBTNode.hpp">
+			<Option target="ft_containers"/>
+		</Unit>
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/list.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/mainMap.cpp">
 			<Option target="ft_containers"/>
 		</Unit>
-		<Unit filename="/Users/lbagg/Desktop/ft_containers/mainQueue.cpp">
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/map.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
-		<Unit filename="/Users/lbagg/Desktop/ft_containers/map.hpp">
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/mapIterator.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/queue.hpp">

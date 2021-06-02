@@ -178,8 +178,9 @@ ft::vector<Type, Alloc>::vector(const vector& x) {
 
 template <class Type, class Alloc>
 ft::vector<Type, Alloc>::~vector() {
-    for (int i = 0; i < this->_capacity; i++)
+    for (int i = 0; i < this->_size; i++)
         this->_allocator.destroy(&_arr[i]);
+    this->_allocator.deallocate(_arr, this->_capacity);
 }
 
 ////    METHODS    ////
@@ -223,6 +224,7 @@ void ft::vector<Type, Alloc>::reserve(size_type n) {
 		this->_allocator.construct(&newArr[i], this->_arr[i]);
 		this->_allocator.destroy(&this->_arr[i]);
 	}
+    this->_allocator.deallocate(this->_arr, this->_capacity);
 	this->_capacity = n;
 	this->_arr = newArr;
 }
@@ -279,7 +281,7 @@ template <class Type, class Alloc>
 void ft::vector<Type, Alloc>::push_back(const value_type& val) {
 //    if (this->_size == this->_capacity && this->_size > 1)
 //        reserve(this->_capacity * 2);
-	insert(this->end(), val);
+	insert(this->end(), 1, val);
 }
 
 template <class Type, class Alloc>
@@ -303,7 +305,6 @@ void ft::vector<Type, Alloc>::insert(iterator position, size_type n, const value
             reserve(this->_capacity * 2);
     else
         reserve(this->_size + n);
-//	for (int j = this->_capacity - 1; j > index; j--) {
     for (int j = this->_size + n - 1; j > index; j--) {
 		this->_allocator.construct(&this->_arr[j], this->_arr[j - n]);
 		this->_allocator.destroy(&this->_arr[j - n]);

@@ -70,8 +70,8 @@ int main() {
     std::cout << std::endl << "  --  SWAP  ---" << std::endl;
 
     swap(a,c);
-    std::cout << "FT:  " << std::boolalpha << "Empty: " << a.empty() << " | Size: " << a.size() << " | Front: " << a.front() << " | Back: " << a.back() << std::endl;
-    std::cout << "FT:  " << std::boolalpha << "Empty: " << c.empty() << " | Size: " << c.size() << " | Front: " << c.front() << " | Back: " << c.back() << std::endl;
+    std::cout << "STD:  " << std::boolalpha << "Empty: " << a.empty() << " | Size: " << a.size() << " | Front: " << a.front() << " | Back: " << a.back() << std::endl;
+    std::cout << "STD:  " << std::boolalpha << "Empty: " << c.empty() << " | Size: " << c.size() << " | Front: " << c.front() << " | Back: " << c.back() << std::endl;
 
     swap(ft_a, ft_c);
     std::cout << "FT:  " << std::boolalpha << "Empty: " << ft_a.empty() << " | Size: " << ft_a.size() << " | Front: " << ft_a.front() << " | Back: " << ft_a.back() << std::endl;

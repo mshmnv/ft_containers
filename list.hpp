@@ -167,7 +167,6 @@ namespace ft {
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc), _size(0){
 	this->_empty = this->_nodeAllocator.allocate(1);
-//	this->_nodeAllocator.construct(this->_empty, 0);
 	this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
@@ -179,7 +178,6 @@ ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc)
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(int count, const Type& data, const allocator_type& alloc) : _allocatorType(alloc), _size(0) {
 	this->_empty = this->_nodeAllocator.allocate(1);
-//    this->_nodeAllocator.construct(this->_empty, 0);
     this->_head = this->_empty;
 	this->_tail = this->_empty;
 	for (int i = 0; i < count; i++)

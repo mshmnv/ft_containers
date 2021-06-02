@@ -29,6 +29,12 @@ namespace ft {
         void push(const value_type& val) { return _cont.push_back(val); }
         void pop() { _cont.pop_front(); }
 
+        void swap (queue& x) { _cont.swap(x._cont); }
+        friend bool operator>(queue const &lhs, queue const &rhs) { return lhs._cont > rhs._cont; }
+        friend bool operator==(queue const &lhs, queue const &rhs) { return lhs._cont == rhs._cont; }
+        friend bool operator!=(queue const &lhs, queue const &rhs) { return lhs._cont != rhs._cont; }
+        friend bool operator<=(queue const &lhs, queue const &rhs) { return lhs._cont <= rhs._cont; }
+        friend bool operator>=(queue const &lhs, queue const &rhs) { return lhs._cont >= rhs._cont; }
     };
 }
 
@@ -36,37 +42,37 @@ namespace ft {
 
 template <class T, class Container>
 bool operator==(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>& rhs) {
-
+    return lhs == rhs;
 }
 
 template <class T, class Container>
 bool operator!=(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>& rhs) {
-
+    return lhs != rhs;
 }
 
 template <class T, class Container>
 bool operator<(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>& rhs) {
-
+    return lhs < rhs;
 }
 
 template <class T, class Container>
 bool operator<=(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>& rhs) {
-
+    return lhs <= rhs;
 }
 
 template <class T, class Container>
 bool operator>(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>& rhs) {
-
+    return lhs > rhs;
 }
 
 template <class T, class Container>
 bool operator>=(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>& rhs) {
-
+    return lhs >= rhs;
 }
 
 template <class T, class Container>
 void swap(ft::queue<T,Container>& x, ft::queue<T,Container>& y) noexcept(noexcept(x.swap(y))) {
-
+    x.swap(y);
 }
 
 #endif

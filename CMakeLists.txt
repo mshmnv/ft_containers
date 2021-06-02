@@ -11,7 +11,10 @@ add_executable(ft_containers
         vector.hpp
         stack.hpp
         queue.hpp
+        map.hpp
 #        mainList.cpp
 #        mainVector.cpp
 #        mainStack.cpp
-        mainQueue.cpp map.hpp mainMap.cpp)
+#        mainQueue.cpp
+        mainMap.cpp
+        RBTNode.hpp mapIterator.hpp)

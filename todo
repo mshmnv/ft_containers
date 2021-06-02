@@ -1,9 +1,4 @@
-queue, stack
-- comparisons
-- swap
-
 vector
-- leaks in insert
 - vector<bool> ??? don't know
 
 
