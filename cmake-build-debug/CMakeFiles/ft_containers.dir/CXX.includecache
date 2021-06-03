@@ -6,17 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/Users/lbagg/Desktop/ft_containers/mainQueue.cpp
-queue.hpp
-/Users/lbagg/Desktop/ft_containers/queue.hpp
-queue
--
-deque
--
-
-/Users/lbagg/Desktop/ft_containers/queue.hpp
+/Users/lbagg/Desktop/ft_containers/RBTNode.hpp
 iostream
 -
-deque
+
+/Users/lbagg/Desktop/ft_containers/mainMap.cpp
+map.hpp
+/Users/lbagg/Desktop/ft_containers/map.hpp
+map
 -
+
+/Users/lbagg/Desktop/ft_containers/map.hpp
+iostream
+-
+RBTNode.hpp
+/Users/lbagg/Desktop/ft_containers/RBTNode.hpp
 

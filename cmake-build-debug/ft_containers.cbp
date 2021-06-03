@@ -97,9 +97,6 @@
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/map.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
-		<Unit filename="/Users/lbagg/Desktop/ft_containers/mapIterator.hpp">
-			<Option target="ft_containers"/>
-		</Unit>
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/queue.hpp">
 			<Option target="ft_containers"/>
 		</Unit>

@@ -7,6 +7,7 @@ include_directories(.)
 
 add_executable(ft_containers
         Node.hpp
+        RBTNode.hpp
         list.hpp
         vector.hpp
         stack.hpp
@@ -17,4 +18,4 @@ add_executable(ft_containers
 #        mainStack.cpp
 #        mainQueue.cpp
         mainMap.cpp
-        RBTNode.hpp mapIterator.hpp)
+        )

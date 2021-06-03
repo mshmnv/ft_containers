@@ -48,7 +48,7 @@ namespace ft {
 			public:
 				iterator() : _curNode(NULL) {}
 				iterator(Node<Type> *other) : _curNode(other) {}
-				iterator(iterator  const &other) { this->_curNode = other._curNode; }
+				iterator(iterator const &other) { this->_curNode = other._curNode; }
 				iterator& operator++() { this->_curNode = this->_curNode->next; return *this; }
 				iterator& operator--() { this->_curNode = this->_curNode->prev; return *this; }
 				iterator& operator++(int) { ++(*this); return *this; }
@@ -190,7 +190,6 @@ ft::list<Type, Alloc>::list (InputIterator first, InputIterator last, const allo
 	typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
 	this->_size = 0;
 	this->_empty = this->_nodeAllocator.allocate(1);
-//    this->_nodeAllocator.construct(this->_empty, 0);
     this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
