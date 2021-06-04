@@ -85,7 +85,7 @@
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/Node.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
-		<Unit filename="/Users/lbagg/Desktop/ft_containers/RBTNode.hpp">
+		<Unit filename="/Users/lbagg/Desktop/ft_containers/RBTree.hpp">
 			<Option target="ft_containers"/>
 		</Unit>
 		<Unit filename="/Users/lbagg/Desktop/ft_containers/list.hpp">

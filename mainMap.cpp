@@ -25,29 +25,60 @@ void printMap(ft::map<Key, T> map) {
     std::cout << std::endl;
 }
 
-
+//int main()
+//{
+//    RBTree<char, int> tree;
+//
+//    tree.insert(std::pair<char,int>('g',7));
+//    tree.insert(std::pair<char,int>('f',6));
+//    tree.insert(std::pair<char,int>('e',5));
+//    tree.insert(std::pair<char,int>('d',4));
+//    tree.insert(std::pair<char,int>('c',3));
+//    tree.insert(std::pair<char,int>('b',2));
+//    tree.insert(std::pair<char,int>('a',1));
+//
+//    std::cout << std::endl << "Inorder printing\n";
+//    tree.inorder();
+//
+//
+//    std::cout << std::endl << "Level order printing\n";
+//    tree.levelOrder();
+//    return 0;
+//}
 
 int main() {
     std::map<char, int> map1;
-    map1.insert(std::pair<char,int>('a',100));
-    map1.insert(std::pair<char,int>('a',100));
-    map1.insert(std::pair<char,int>('b',200));
+    map1.insert(std::pair<char,int>('g',7));
+    map1.insert(std::pair<char,int>('f',6));
+    map1.insert(std::pair<char,int>('e',5));
+    map1.insert(std::pair<char,int>('d',4));
+    map1.insert(std::pair<char,int>('c',3));
+    map1.insert(std::pair<char,int>('b',2));
+    map1.insert(std::pair<char,int>('a',1));
     printMap(map1);
 
     ft::map<char, int> ft_map1;
-    ft_map1.insert(std::pair<char,int>('a',100));
-    ft_map1.insert(std::pair<char,int>('a',200));
-    ft_map1.insert(std::pair<char,int>('b',200));
+    ft_map1.insert(std::pair<char,int>('g',7));
+//    ft_map1.insert(std::pair<char,int>('f',6));
+//    ft_map1.insert(std::pair<char,int>('e',5));
+//    ft_map1.insert(std::pair<char,int>('d',4));
+//    ft_map1.insert(std::pair<char,int>('c',3));
+//    ft_map1.insert(std::pair<char,int>('b',2));
+//    ft_map1.insert(std::pair<char,int>('a',1));
+
+    inorderPrinting(ft_map1._root);
+
+//    std::cout << "FT:  (" << ft_map1.size() << ") "; ft_map1._tree->inorder();
 
 //    printMap(ft_map1); // after operator=
+//    ft::map<char, int>::iterator it = ft_map1.begin();
+//    ft::map<char, int>::iterator ite = ft_map1.end();
+//
+//    std::cout << "FT:  (" << ft_map1.size() << ") ";
+//    for (; it != ite; it++)
+//        std::cout << it->first << ":" << it->second << " | ";
+//    std::cout << std::endl;
 
-    ft::map<char, int>::iterator it = ft_map1.begin();
-    ft::map<char, int>::iterator ite = ft_map1.end();
-
-    std::cout << "FT:  (" << ft_map1.size() << ") ";
-    for (; it != ite; it++)
-        std::cout << it->first << ":" << it->second << " | ";
-    std::cout << std::endl;
 
     return 0;
 }

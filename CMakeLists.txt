@@ -7,7 +7,7 @@ include_directories(.)
 
 add_executable(ft_containers
         Node.hpp
-        RBTNode.hpp
+        RBTree.hpp
         list.hpp
         vector.hpp
         stack.hpp

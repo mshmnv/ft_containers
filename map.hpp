@@ -2,8 +2,7 @@
 #define MAP_HPP
 
 #include <iostream>
-#include "RBTNode.hpp"
-//#include "mapIterator.hpp"
+#include "RBTree.hpp"
 
 //todo
 // iterators
@@ -32,28 +31,32 @@ namespace ft {
 
 
         size_type _size;
-        RBTNode<Key, T>* _root;
-//        RBTNode<Key, T>* _first;
-//        RBTNode<Key, T>* _last;
 
         std::allocator<std::pair<const Key,T> > _pairAllocator;
         allocator_type _allocatorType;
+        key_compare _comp;
 
     public:
+        Node<Key,T> *_root;
+//        RBTree<Key, T> *_tree;
 
         ////    CONSTRUCTORS    ////
 
-        explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-        _size(0) {
-            this->_root = new RBTNode<Key, T>;
-            this->_root->right = new RBTNode<Key, T>;
-
+        explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+        : _size(0), _comp(comp) {
+//            this->_tree = new RBTree<Key,T>(comp, alloc);
+            this->_root = new Node<Key, T>(comp, alloc);
         }
 
         template <class InputIterator>
             map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
                 const allocator_type& alloc = allocator_type(),
-                typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0) {
+                typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0)
+                : _size(0), _comp(comp) {
+//            this->_tree = new RBTree<Key,T>(comp, alloc);
+            this->_root = new Node<Key, T>(comp, alloc);
+
+
         }
 
         map(const map& x) {
@@ -72,11 +75,11 @@ namespace ft {
         ////    ITERATORS    ////
         class iterator {
         protected:
-            RBTNode<Key, T> *_node;
+            Node<Key, T> *_node;
             friend class map;
         public:
             iterator() : _node(NULL) {}
-            iterator(RBTNode<Key, T> *node) : _node(node) {}
+            iterator(Node<Key, T> *node) : _node(node) {}
             iterator(iterator const& other) : _node(other._node) {}
             ~iterator() { }
             iterator& operator++() {
@@ -117,22 +120,19 @@ namespace ft {
         ////    METHODS    ////
         bool empty() const { return this->_size == 0; }
         size_type size() const { return this->_size; }
-        size_type max_size() const { return std::numeric_limits<size_t>::max() / sizeof(this->_tree); }
+        size_type max_size() const { return std::numeric_limits<size_t>::max() / sizeof(this->_root); }
 
 
 
         std::pair<iterator,bool> insert(const value_type& val) {
-            iterator tmp = find(val.first);
-            if (tmp != this->end())
-                return std::make_pair(tmp, false);
+//            iterator tmp = find(val.first);
+//            if (tmp != this->end())
+//                return std::make_pair(tmp, false);
+//            this->_tree->insert(val);
 
-            if (this->_size == 0) {
-                this->_pairAllocator.construct(&this->_root->pair, val);
-                this->_root->color = BLACK;
-            }
-
+            insertNode(this->_root, val, _comp);
             this->_size++;
-            return std::make_pair(this->end(), true);
+            return std::make_pair(this->begin(), true);
         }
 
 //        iterator insert(iterator position, const value_type& val);
@@ -155,6 +155,8 @@ namespace ft {
 //        }
 
 //        void clear();
+        allocator_type get_allocator() const { return this->_allocatorType; }
+
         ////     OVERLOADS    ////
         mapped_type& operator[](const key_type& k) {
             // find(k)

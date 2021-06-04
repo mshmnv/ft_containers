@@ -6,8 +6,10 @@
 
 #IncludeRegexTransform: 
 
-/Users/lbagg/Desktop/ft_containers/RBTNode.hpp
+/Users/lbagg/Desktop/ft_containers/RBTree.hpp
 iostream
+-
+queue
 -
 
 /Users/lbagg/Desktop/ft_containers/mainMap.cpp
@@ -19,6 +21,6 @@ map
 /Users/lbagg/Desktop/ft_containers/map.hpp
 iostream
 -
-RBTNode.hpp
-/Users/lbagg/Desktop/ft_containers/RBTNode.hpp
+RBTree.hpp
+/Users/lbagg/Desktop/ft_containers/RBTree.hpp
 
