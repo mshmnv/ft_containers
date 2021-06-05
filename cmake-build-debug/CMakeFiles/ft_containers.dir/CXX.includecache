@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/lbagg/Desktop/ft_containers/RBTree.hpp
+/Users/lbagg/Desktop/ft_containers/RBTnode.hpp
 iostream
 -
-queue
--
+map.hpp
+/Users/lbagg/Desktop/ft_containers/map.hpp
 
 /Users/lbagg/Desktop/ft_containers/mainMap.cpp
 map.hpp
@@ -21,6 +21,6 @@ map
 /Users/lbagg/Desktop/ft_containers/map.hpp
 iostream
 -
-RBTree.hpp
-/Users/lbagg/Desktop/ft_containers/RBTree.hpp
+RBTnode.hpp
+/Users/lbagg/Desktop/ft_containers/RBTnode.hpp
 

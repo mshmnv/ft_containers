@@ -31,7 +31,7 @@ namespace ft {
 			explicit list(int, const value_type& = value_type(), const allocator_type& = allocator_type());
 			template <class InputIterator>
 				list (InputIterator first, InputIterator last, const allocator_type& = allocator_type(),
-					typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
+					c);
 			explicit list(list const &);
 			~list();
 
