@@ -16,6 +16,7 @@ private:
     key_compare _comp;
 
 public:
+    bool isEmpty;
     int color;
     std::pair<const Key, T> *pair;
     Node* left;
@@ -23,19 +24,16 @@ public:
     Node* parent;
     std::allocator<std::pair<const Key,T> > _pairAllocator;
 
-    Node(const value_type& val, Node<Key,T> *parent = NULL, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc) {
+    Node(const value_type& val, Node<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc), isEmpty(false) {
         this->pair = this->_pairAllocator.allocate(1);
         this->_pairAllocator.construct(pair, val);
-//        this->right = new Node<Key,T>(comp, alloc, this);
     }
 
-    Node(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) //, Node<Key,T> *parent = NULL)
-    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc) {
+    Node(Node<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc), isEmpty(true) {
     }
-    ~Node() { }
-
-
+    ~Node() { this->_pairAllocator.deallocate(this->pair, 1); }
 };
 
 
@@ -50,6 +48,14 @@ Node<Key,T> *rotateLeft(Node<Key,T> *node) {
     Node<Key,T> *child = node->right;
     Node<Key,T> *childLeft = child->left;
     child->left = node;
+
+    child->parent = node->parent;
+    if (node->parent->left == node)
+        node->parent->left = child;
+    else
+        node->parent->right = child;
+    node->parent = child;
+
     node->right = childLeft;
     return child;
 }
@@ -59,6 +65,14 @@ Node<Key,T> *rotateRight(Node<Key,T> *node) {
     Node<Key,T> *child = node->left;
     Node<Key,T> *childRight = child->right;
     child->right = node;
+
+    child->parent = node->parent;
+    if (node->parent->left == node)
+        node->parent->left = child;
+    else
+        node->parent->right = child;
+    node->parent = child;
+
     node->left = childRight;
     return child;
 }
@@ -69,9 +83,22 @@ Node<Key,T> *insertNode(Node<Key,T> *node, Node<Key,T> *parent, const std::pair<
         return new Node<Key,T>(val, parent, comp, pairAlloc);
     if (comp(val.first, node->pair->first))
         node->left = insertNode(node->left, node, val, comp, pairAlloc);
+    // if value is bigger but there is emptyNode on the right
+    else if (!comp(val.first, node->pair->first) && (node->right && node->right->isEmpty)) {
+        Node<Key,T> *newNode = new Node<Key,T>(val, NULL, comp, pairAlloc);
+        newNode->right = node->right;
+        node->right->parent = newNode;
+        newNode->left = node;
+        node->parent = newNode;
+        node->right = NULL;
+        return newNode;
+    }
     else if (!comp(val.first, node->pair->first))
         node->right = insertNode(node->right, node, val, comp, pairAlloc);
     else
+        return node;
+
+    if (node->right && node->right->isEmpty)
         return node;
     // case 1: right child is RED but left child is BLACK or doesn't exist
     if ((node->right && node->right->color == RED) && (node->left == NULL || node->left->color == BLACK)) {
@@ -117,7 +144,7 @@ void deleteNode(Node<Key,T> *node) {
     }
     else {
         Node<Key,T> *next = node;
-        if (next->right) {
+        if (next->right && !next->right->isEmpty) {
             next = next->right;
             while (next->left)
                 next = next->left;
@@ -140,11 +167,7 @@ void deleteNode(Node<Key,T> *node) {
         }
         std::pair<const Key,T> *tmp = next->pair;
         next->pair = node->pair;
-        node->pair = next->pair;
-//        Node<Key,T> *next = (++iterator(node))._node();
-//    if (!next)
-//        next = (--iterator(n)).node();
-//    swap(next->pair, n->pair);
+        node->pair = tmp;
         return deleteNode(next);
     }
 //    node->_pairAllocator.deallocate(node->pair, 1);
@@ -153,13 +176,10 @@ void deleteNode(Node<Key,T> *node) {
 }
 
 
-
-
-
 template<class Key, class T>
 void inorderPrinting(Node<Key,T> *node)
 {
-    if (node == NULL)
+    if (node == NULL || node->isEmpty)
         return ;
     inorderPrinting(node->left);
     std::cout << node->pair->first << ":" << node->pair->second << " | ";

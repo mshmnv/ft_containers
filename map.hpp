@@ -37,13 +37,15 @@ namespace ft {
 
     public:
         Node<Key,T> *_root;
+        Node<Key,T> *_end;
 
         ////    CONSTRUCTORS    ////
 
         explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
         : _size(0), _comp(comp), _root(NULL) {
-            this->_root = new Node<Key, T>(comp, alloc);
-//            this->_root->right = new Node<Key, T>(comp, alloc);
+            this->_root = new Node<Key, T>(NULL, comp, alloc);
+            this->_root->right = new Node<Key,T>(this->_root, comp, alloc);
+            this->_root->right->color = BLACK;
         }
 
         template <class InputIterator>
@@ -51,8 +53,9 @@ namespace ft {
                 const allocator_type& alloc = allocator_type(),
                 typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0)
                 : _size(0), _comp(comp), _root(NULL) {
-            this->_root = new Node<Key, T>(comp, alloc);
-//            this->_root->right = new Node<Key, T>(comp, alloc);
+            this->_root = new Node<Key, T>(NULL, comp, alloc);
+            this->_root->right = new Node<Key,T>(this->_root, comp, alloc);
+            this->_root->right->color = BLACK;
         }
 
         map(const map& x) {
@@ -128,6 +131,12 @@ namespace ft {
 
 //        const_iterator begin() const;
         iterator end() { return iterator(this->_root->right); }
+//        iterator end() {
+//            if (this->_root->right)
+//                return iterator(this->_root->right->right);
+//            return iterator(this->_root->right);
+//        }
+
 //        const_iterator end() const;
 //        reverse_iterator rbegin();
 //        const_reverse_iterator rbegin() const;
@@ -144,18 +153,21 @@ namespace ft {
             if (this->_size == 0) {
                 this->_root->pair = this->_pairAllocator.allocate(1);
                 this->_pairAllocator.construct(this->_root->pair, val);
+                this->_root->isEmpty = false;
             }
             else {
                 iterator tmp;
                 if ((tmp = find(val.first)) != this->end())
                     return std::make_pair(tmp, false);
-                this->_root = insertNode(this->_root, this->_root->right, val, _comp, _pairAllocator);
+                this->_root = insertNode(this->_root, this->_root->parent, val, _comp, _pairAllocator);
             }
+            this->_root->color = BLACK;
             this->_size++;
             return std::make_pair(this->begin(), true);
         }
 
 //        iterator insert(iterator position, const value_type& val) {
+//        (void)position;
 //            insertNode(position._node, position._node->parent, val, _comp, _pairAllocator);
 //        }
 
@@ -170,7 +182,7 @@ namespace ft {
 
         iterator find(const key_type& k) {
             Node<Key,T> *tmpNode = this->_root;
-            while (tmpNode != NULL) {
+            while (tmpNode != NULL && !tmpNode->isEmpty) {
                 if (_comp(k, tmpNode->pair->first))
                     tmpNode = tmpNode->left;
                 else if (k == tmpNode->pair->first)
@@ -195,24 +207,33 @@ namespace ft {
 //        }
 
         void erase(iterator position) {
-            deleteNode(position._node);
+            if (find(position._node->pair->first) == this->end())
+                return;
+            if (this->_size == 1) {
+                this->_pairAllocator.deallocate(this->_root->pair, 1);
+                this->_root = NULL;
+//                delete this->_root;
+//                this->_root = new Node<Key,T>(NULL, _comp, _pairAllocator);
+            }
+            else
+                deleteNode(position._node);
             this->_size--;
         }
 
-//        size_type erase(const key_type& k) {
-//            iterator tmp = find(k);
-//            erase(tmp);
-//            return 1;
-//        }
+        size_type erase(const key_type& k) {
+            iterator tmp = find(k);
+            erase(tmp);
+            return 1;
+        }
 
-//        void erase(iterator first, iterator last) {
-//            while (first != last) {
-//                iterator tmp = first + 1;
-//                erase(first);
-//            }
-//        }
+        void erase(iterator first, iterator last) {
+            while (first != last) {
+                iterator tmp = first + 1;
+                erase(first);
+            }
+        }
 
-//        void clear() { erase(this->begin(), this->end()); }
+        void clear() { erase(this->begin(), this->end()); }
 
         allocator_type get_allocator() const { return this->_allocatorType; }
 
