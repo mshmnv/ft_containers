@@ -4,6 +4,9 @@
 #include <iostream>
 #include "Node.hpp"
 
+//todo
+// iterators operator++(int) and --(int) - save current position, ++, return previos one
+
 namespace ft {
 	template <class Type, class Alloc = std::allocator<Type> >
 	class list {

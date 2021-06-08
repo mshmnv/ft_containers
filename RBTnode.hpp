@@ -31,7 +31,7 @@ public:
     }
 
     Node(Node<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc), isEmpty(true) {
+    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc), pair(NULL), isEmpty(true) {
     }
     ~Node() { this->_pairAllocator.deallocate(this->pair, 1); }
 };
@@ -81,7 +81,15 @@ template<class Key, class T, class Compare, class Alloc>
 Node<Key,T> *insertNode(Node<Key,T> *node, Node<Key,T> *parent, const std::pair<const Key,T>& val, Compare comp, Alloc pairAlloc) {
     if (node == NULL)
         return new Node<Key,T>(val, parent, comp, pairAlloc);
-    if (comp(val.first, node->pair->first))
+    if (comp(val.first, node->pair->first) && (node->left && node->left->isEmpty)) {
+        Node<Key,T> *newNode = new Node<Key,T>(val, NULL, comp, pairAlloc);
+        newNode->left = node->left;
+        node->left->parent = newNode;
+        newNode->parent = node;
+        node->left = newNode;
+        return node;
+    }
+    else if (comp(val.first, node->pair->first))
         node->left = insertNode(node->left, node, val, comp, pairAlloc);
     // if value is bigger but there is emptyNode on the right
     else if (!comp(val.first, node->pair->first) && (node->right && node->right->isEmpty)) {
@@ -98,7 +106,7 @@ Node<Key,T> *insertNode(Node<Key,T> *node, Node<Key,T> *parent, const std::pair<
     else
         return node;
 
-    if (node->right && node->right->isEmpty)
+    if ((node->right && node->right->isEmpty) || (node->left && node->left->isEmpty) )
         return node;
     // case 1: right child is RED but left child is BLACK or doesn't exist
     if ((node->right && node->right->color == RED) && (node->left == NULL || node->left->color == BLACK)) {

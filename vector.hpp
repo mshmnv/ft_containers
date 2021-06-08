@@ -4,7 +4,6 @@
 #include <iostream>
 
 //todo
-// ?leaks
 // ?vector<bool>
 
 namespace ft {
