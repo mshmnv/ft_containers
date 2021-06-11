@@ -4,11 +4,6 @@
 #include <iostream>
 #include "RBTnode.hpp"
 
-//todo
-// iterator end()
-// []
-// erase
-
 namespace ft {
     template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key,T> > >
     class map {
@@ -29,11 +24,23 @@ namespace ft {
         typedef const value_type* const_pointer;
         typedef size_t size_type;
 
-        size_type _size;
+        class value_compare {
+        protected:
+            friend class map;
+            Compare comp;
+            value_compare(Compare c = key_compare()) : comp(c){};
+        public:
+            typedef bool result_type;
+            typedef value_type first_argument_type;
+            typedef value_type second_argument_type;
+            bool operator()(value_type const& x, value_type const& y) const { return comp(x.first, y.first); }
+        };
 
+        size_type _size;
         std::allocator<std::pair<const Key,T> > _pairAllocator;
         allocator_type _allocatorType;
         key_compare _comp;
+        value_compare _value_comp;
         Node<Key,T> *_root;
         Node<Key,T> *_leftEmpty;
 
@@ -42,13 +49,11 @@ namespace ft {
         ////////////////////////////
         ////    CONSTRUCTORS    ////
         ////////////////////////////
-
         explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-        : _size(0), _comp(comp), _pairAllocator(alloc) {
+        : _size(0), _comp(comp), _value_comp(comp), _pairAllocator(alloc) {
             this->_root = new Node<Key, T>(NULL, comp, alloc);
             this->_root->right = new Node<Key,T>(this->_root, comp, alloc);
             this->_root->right->color = BLACK;
-
 
             this->_root->left = new Node<Key,T>(this->_root, comp, alloc);
             this->_root->left->color = BLACK;
@@ -59,26 +64,23 @@ namespace ft {
             map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
                 const allocator_type& alloc = allocator_type(),
                 typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0)
-                : _size(0), _comp(comp), _pairAllocator(alloc) {
+                : _size(0), _comp(comp), _value_comp(comp), _pairAllocator(alloc) {
             this->_root = new Node<Key, T>(NULL, comp, alloc);
             this->_root->right = new Node<Key,T>(this->_root, comp, alloc);
             this->_root->right->color = BLACK;
-
             this->_root->left = new Node<Key,T>(this->_root, comp, alloc);
             this->_root->left->color = BLACK;
             this->_leftEmpty = this->_root->left;
             insert(first, last);
         }
 
-        map(const map& x) : _size(0), _comp(x._comp), _pairAllocator(x._pairAllocator) {
+        map(const map& x) : _size(0), _comp(x._comp), _value_comp(x._value_comp), _pairAllocator(x._pairAllocator) {
             this->_root = new Node<Key, T>(NULL, _comp, _pairAllocator);
             this->_root->right = new Node<Key,T>(this->_root, _comp, _pairAllocator);
             this->_root->right->color = BLACK;
-
             this->_root->left = new Node<Key,T>(this->_root, _comp, _pairAllocator);
             this->_root->left->color = BLACK;
             this->_leftEmpty = this->_root->left;
-
             insert(x.begin(), x.end());
         }
 
@@ -87,26 +89,24 @@ namespace ft {
             insert(x.begin(), x.end());
             this->_pairAllocator = x._pairAllocator;
             this->_allocatorType = x._allocatorType;
+            this->_comp = x.comp;
+            this->_value_comp = x._value_comp;
             return *this;
         }
 
         //////////////////////////
         ////    DESTRUCTOR    ////
         //////////////////////////
-
         ~map() {
-//            iterator it = this->begin();
-//            iterator ite = this->end();
-//            for (; it != ite; it++) {
-//                this->_pairAllocator.destroy(it._node->pair);
-//                // + delete node
-//            }
+            clear();
+            delete this->_root->right;
+            delete this->_root->left;
+            delete this->_root;
         }
 
         /////////////////////////
         ////    ITERATORS    ////
         /////////////////////////
-
         class iterator {
         protected:
             Node<Key, T> *_node;
@@ -336,7 +336,31 @@ namespace ft {
                 erase(first++);
         }
 
-        void swap (map& x);
+        void swap (map& x) {
+            size_type sizeTmp = this->_size;
+            std::allocator<std::pair<const Key,T> > allocTmp = this->_pairAllocator;
+            allocator_type atTmp = this->_allocatorType;
+            key_compare kCompTmp = this->_comp;
+            value_compare vCompTmp = this->_value_comp;
+            Node<Key,T> *rootTmp = this->_root;
+            Node<Key,T> *leftTmp = this->_leftEmpty;
+
+            this->_size = x._size;
+            this->_pairAllocator = x._pairAllocator;
+            this->_allocatorType = x._allocatorType;
+            this->_comp = x._comp;
+            this->_value_comp = x._value_comp;
+            this->_root = x._root;
+            this->_leftEmpty = x._leftEmpty;
+
+            x._size = sizeTmp;
+            x._pairAllocator = allocTmp;
+            x._allocatorType = atTmp;
+            x._comp = kCompTmp;
+            x._value_comp = vCompTmp;
+            x._root = rootTmp;
+            x._leftEmpty = leftTmp;
+        }
 
         void clear() {
             erase(this->begin(), this->end());
@@ -346,12 +370,17 @@ namespace ft {
         ////     OBSERVERS    ////
         //////////////////////////
 
-//        key_compare key_comp() const;
-//        value_compare value_comp() const;
+        key_compare key_comp() const {
+            return this->_comp;
+        }
+        value_compare value_comp() const {
+            return this->_value_comp;
+        }
 
         ///////////////////////////
         ////     OPERATIONS    ////
         ///////////////////////////
+
         iterator find(const key_type& k) {
             if (this->_size) {
                 Node<Key,T> *tmpNode = this->_root;
@@ -380,26 +409,62 @@ namespace ft {
             return this->end();
         }
 
-//        size_type count(const key_type& k) const;
+        size_type count(const key_type& k) const {
+            if (find(k) == this->end())
+                return 0;
+            return 1;
+        }
 
-//        iterator lower_bound(const key_type& k);
-//        const_iterator lower_bound(const key_type& k) const;
+        iterator lower_bound(const key_type& k) {
+            iterator it = begin();
+            for (iterator it = begin(); it != end(); it++) {
+                if (this->_comp(it->first, k) <= 0)
+                    return it;
+            }
+            return end();
+        }
 
-//        iterator upper_bound(const key_type& k);
-//        const_iterator upper_bound(const key_type& k) const;
+        const_iterator lower_bound(const key_type& k) const {
+            const_iterator it = begin();
+            for (const_iterator it = begin(); it != end(); it++) {
+                if (this->_comp(it->first, k) <= 0)
+                    return it;
+            }
+            return end();
+        }
 
-//        std::pair<const_iterator,const_iterator> equal_range(const key_type& k) const;
-//        std::pair<iterator,iterator> equal_range(const key_type& k);
+        iterator upper_bound(const key_type& k) {
+            iterator it = begin();
+            for (iterator it = begin(); it != end(); it++) {
+                if (it->first != k && this->_comp(it->first, k) <= 0)
+                    return it;
+            }
+            return end();
+        }
+
+        const_iterator upper_bound(const key_type& k) const {
+            const_iterator it = begin();
+            for (const_iterator it = begin(); it != end(); it++) {
+                if (it->first != k && this->_comp(it->first, k) <= 0)
+                    return it;
+            }
+            return end();
+        }
+
+        std::pair<const_iterator,const_iterator> equal_range(const key_type& k) const {
+            return std::pair<const_iterator,const_iterator>(lower_bound(k), upper_bound(k));
+        }
+
+        std::pair<iterator,iterator> equal_range(const key_type& k) {
+            return std::pair<iterator,iterator>(lower_bound(k), upper_bound(k));
+        }
 
         /////////////////////////
         ////    ALLOCATOR    ////
         /////////////////////////
 
         allocator_type get_allocator() const { return this->_allocatorType; }
-
     };
 }
-
-
 
 #endif

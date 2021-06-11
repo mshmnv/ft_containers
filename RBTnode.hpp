@@ -178,7 +178,6 @@ void deleteNode(Node<Key,T> *node) {
         node->pair = tmp;
         return deleteNode(next);
     }
-//    node->_pairAllocator.deallocate(node->pair, 1);
     delete node;
     return;
 }
@@ -193,7 +192,5 @@ void inorderPrinting(Node<Key,T> *node)
     std::cout << node->pair->first << ":" << node->pair->second << " | ";
     inorderPrinting(node->right);
 }
-
-
 
 #endif

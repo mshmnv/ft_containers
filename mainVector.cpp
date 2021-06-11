@@ -161,13 +161,6 @@ int main(){
 	printVector(insVect);
 	ft_insVect.insert(--ft_insVect.end(), 5, 77);
 	printVector(ft_insVect);
-
-//	insVect.insert(--insVect.begin(), 5, 66);
-//	printVector(insVect);
-////todo
-//	ft_insVect.insert(--ft_insVect.begin(), 5, 66);
-//	printVector(ft_insVect);
-
 	std::cout << std::endl;
 
 	std::vector<int> toIns(10,1);
@@ -305,8 +298,7 @@ int main(){
     std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
     std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
 
-	while(1)
-		;
+//	while(1) ;
 
     return 0;
 }

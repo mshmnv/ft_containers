@@ -4,9 +4,6 @@
 #include <iostream>
 #include "Node.hpp"
 
-//todo
-// iterators operator++(int) and --(int) - save current position, ++, return previos one
-
 namespace ft {
 	template <class Type, class Alloc = std::allocator<Type> >
 	class list {
@@ -30,19 +27,26 @@ namespace ft {
 				struct enable_if <true, T> { typedef T type; };
 
 		public:
+            /////////////////////////////
+            ////     CONSTRUCTORS    ////
+            /////////////////////////////
 			explicit list(const allocator_type& = allocator_type());
 			explicit list(int, const value_type& = value_type(), const allocator_type& = allocator_type());
 			template <class InputIterator>
-				list (InputIterator first, InputIterator last, const allocator_type& = allocator_type(),
-					c);
+				list(InputIterator first, InputIterator last, const allocator_type& = allocator_type(),
+                     typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
 			explicit list(list const &);
-			~list();
-
-            allocator_type get_allocator() const { return this->_allocatorType; }
             list &operator=(list const &);
 
-			////    ITERATORS    ////
+            //////////////////////////
+            ////    DESTRUCTOR    ////
+            //////////////////////////
 
+            ~list();
+
+            //////////////////////////
+            ////     ITERATORS    ////
+            //////////////////////////
 			class	const_iterator;
 			class	iterator {
 			protected:
@@ -54,8 +58,8 @@ namespace ft {
 				iterator(iterator const &other) { this->_curNode = other._curNode; }
 				iterator& operator++() { this->_curNode = this->_curNode->next; return *this; }
 				iterator& operator--() { this->_curNode = this->_curNode->prev; return *this; }
-				iterator& operator++(int) { ++(*this); return *this; }
-				iterator& operator--(int) { --(*this); return *this; }
+                iterator operator++(int) { iterator tmp = *this; ++(*this); return tmp; }
+                iterator operator--(int) { iterator tmp = *this; --(*this); return tmp; }
 				bool operator!=(iterator const &it) { return this->_curNode != it._curNode; }
 				bool operator==(iterator const &it) { return this->_curNode == it._curNode; }
 				Type operator*() { return this->_curNode->getData(); }
@@ -79,8 +83,8 @@ namespace ft {
 				reverse_iterator(reverse_iterator const &other) { this->_curNode = other._curNode; }
 				reverse_iterator& operator++() { this->_curNode = this->_curNode->prev; return *this; }
 				reverse_iterator& operator--() { this->_curNode = this->_curNode->next; return *this; }
-				reverse_iterator& operator++(int) { ++(*this); return *this; }
-				reverse_iterator& operator--(int) { --(*this); return *this; }
+                reverse_iterator operator++(int) { reverse_iterator tmp = *this; ++(*this); return tmp; }
+                reverse_iterator operator--(int) { reverse_iterator tmp = *this; --(*this); return tmp; }
 				bool operator!=(reverse_iterator const &it) { return this->_curNode != it._curNode; }
 				Type operator*() { return this->_curNode->getData(); }
 			};
@@ -101,17 +105,28 @@ namespace ft {
 			const_reverse_iterator rbegin() const { return const_reverse_iterator(this->_tail); }
 			reverse_iterator rend() { return reverse_iterator(this->_head->prev); }
 			const_reverse_iterator rend() const { return const_reverse_iterator(this->_head->prev); }
-		
-			////    METHODS    ////
+
+            /////////////////////////
+            ////     CAPACITY    ////
+            /////////////////////////
 
 			bool empty() const;
 			size_t size() const;
             size_t max_size() const;
+
+            ///////////////////////////////
+            ////     ELEMENT ACCESS    ////
+            ///////////////////////////////
+
 			reference back();
             const_reference back() const;
 			reference front();
             const_reference front() const;
-		
+
+            //////////////////////////
+            ////     MODIFIERS    ////
+            //////////////////////////
+
 			void assign(size_t, Type const&);
 			template <class InputIterator>
 				void assign(InputIterator, InputIterator, typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
@@ -129,18 +144,19 @@ namespace ft {
 			void resize(size_t, Type = value_type());
 			void clear();
 
+            ///////////////////////////
+            ////     OPERATIONS    ////
+            ///////////////////////////
+
 			void splice(iterator, list&);
 			void splice(iterator, list&, iterator);
 			void splice(iterator, list&, iterator, iterator);
-
 			void remove(const Type& val);
 			template <class Predicate>
 				void remove_if(Predicate pred);
-			
 			void unique();
 			template <class BinaryPredicate>
 				void unique(BinaryPredicate binary_pred);
-			
 			void merge (list& x);
 			template <class Compare>
 				void merge(list& x, Compare comp);
@@ -148,7 +164,16 @@ namespace ft {
             void sort();
 			template <class Compare>
 				void sort(Compare comp);
-	};
+
+            //////////////////////////
+            ////     ALLOCATOR    ////
+            //////////////////////////
+
+            allocator_type get_allocator() const { return this->_allocatorType; }
+    };
+    /////////////////////////////////////
+    ////     NON-MEMBER FUNCTIONS    ////
+    /////////////////////////////////////
 	template <class Type, class Alloc>
     void swap(ft::list<Type,Alloc>& x, ft::list<Type,Alloc>& y);
     template <class Type, class Alloc>
@@ -165,12 +190,15 @@ namespace ft {
     bool operator>=(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs);
 }
 
-////    CONSTRUCTORS    ////
+/////////////////////////////
+////     CONSTRUCTORS    ////
+/////////////////////////////
 
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc), _size(0){
 	this->_empty = this->_nodeAllocator.allocate(1);
-	this->_head = this->_empty;
+    this->_nodeAllocator.construct(this->_empty, value_type());
+    this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
 	this->_head->prev = this->_empty;
@@ -181,6 +209,7 @@ ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc)
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::list(int count, const Type& data, const allocator_type& alloc) : _allocatorType(alloc), _size(0) {
 	this->_empty = this->_nodeAllocator.allocate(1);
+    this->_nodeAllocator.construct(this->_empty, value_type());
     this->_head = this->_empty;
 	this->_tail = this->_empty;
 	for (int i = 0; i < count; i++)
@@ -189,10 +218,11 @@ ft::list<Type, Alloc>::list(int count, const Type& data, const allocator_type& a
 
 template <class Type, class Alloc>
 template <class InputIterator>
-ft::list<Type, Alloc>::list (InputIterator first, InputIterator last, const allocator_type& alloc,
+ft::list<Type, Alloc>::list(InputIterator first, InputIterator last, const allocator_type& alloc,
 	typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
 	this->_size = 0;
 	this->_empty = this->_nodeAllocator.allocate(1);
+    this->_nodeAllocator.construct(this->_empty, value_type());
     this->_head = this->_empty;
 	this->_tail = this->_empty;
 	this->_head->next = this->_empty;
@@ -209,8 +239,18 @@ ft::list<Type, Alloc>::list(list const &other) {
 	*this = other;
 }
 
+template <class Type, class Alloc>
+ft::list<Type, Alloc>& ft::list<Type, Alloc>::operator=(list const& list) {
+    this->clear();
+    this->insert(this->begin(), list.begin(), list.end());
+    this->_allocatorType = list._allocatorType;
+    this->_nodeAllocator = list._nodeAllocator;
+    return *this;
+}
 
-////    DESTRUCTOR    ////
+///////////////////////////
+////     DESTRUCTOR    ////
+///////////////////////////
 
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::~list() {
@@ -224,7 +264,9 @@ ft::list<Type, Alloc>::~list() {
         this->_nodeAllocator.deallocate(this->_empty, 1);
 }
 
-////    METHODS    ////
+/////////////////////////
+////     CAPACITY    ////
+/////////////////////////
 
 template <class Type, class Alloc>
 bool ft::list<Type, Alloc>::empty() const {
@@ -241,6 +283,9 @@ size_t ft::list<Type, Alloc>::max_size() const {
 	return (std::numeric_limits<size_t>::max() / sizeof(this->_head));
 }
 
+///////////////////////////////
+////     ELEMENT ACCESS    ////
+///////////////////////////////
 
 template <class Type, class Alloc>
 typename ft::list<Type, Alloc>::reference ft::list<Type, Alloc>::back() {
@@ -261,6 +306,10 @@ template <class Type, class Alloc>
 typename ft::list<Type, Alloc>::const_reference ft::list<Type, Alloc>::front() const{
 	return this->_head->getData();
 }
+
+//////////////////////////
+////     MODIFIERS    ////
+//////////////////////////
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::assign(size_t count, Type const& value) {
@@ -447,7 +496,7 @@ void ft::list<Type, Alloc>::clear() {
             this->_nodeAllocator.deallocate(tmp, 1);
 		}
 		this->_empty = this->_nodeAllocator.allocate(1);
-//		this->_nodeAllocator.construct(this->_empty, 0);
+        this->_nodeAllocator.construct(this->_empty, value_type());
 		this->_head = this->_empty;
 		this->_tail = this->_empty;
 		this->_head->next = this->_empty;
@@ -457,6 +506,9 @@ void ft::list<Type, Alloc>::clear() {
 	}
 }
 
+///////////////////////////
+////     OPERATIONS    ////
+///////////////////////////
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::splice(iterator position, list& x) {
@@ -712,19 +764,9 @@ void	ft::list<Type, Alloc>::reverse() {
 	tmpHead->prev = tmpTail;
 }
 
-////     OVERLOADS    ////
-
-
-template <class Type, class Alloc>
-ft::list<Type, Alloc>& ft::list<Type, Alloc>::operator=(list const& list) {
-    this->clear();
-    this->insert(this->begin(), list.begin(), list.end());
-    this->_allocatorType = list._allocatorType;
-    this->_nodeAllocator = list._nodeAllocator;
-    return *this;
-}
-
-////    NON-MEMBER FUNCTIONS    ////
+/////////////////////////////////////
+////     NON-MEMBER FUNCTIONS    ////
+/////////////////////////////////////
 
 template <class Type, class Alloc>
 bool ft::operator==(const ft::list<Type,Alloc>& lhs, const ft::list<Type,Alloc>& rhs) {

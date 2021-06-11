@@ -4,9 +4,6 @@
 #include <iostream>
 #include <deque>
 
-//todo
-// non-member functions - comparisons, swap
-
 namespace ft {
     template <class Type, class Container = std::deque<Type> >
     class queue {
@@ -38,7 +35,9 @@ namespace ft {
     };
 }
 
+/////////////////////////////////////
 ////     NON-MEMBER FUNCTIONS    ////
+/////////////////////////////////////
 
 template <class T, class Container>
 bool operator==(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>& rhs) {

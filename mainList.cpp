@@ -1128,7 +1128,6 @@ int main() {
     std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
     std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
 
-//    while (1)
-//        ;
+//    while (1) ;
     return 0;
 }

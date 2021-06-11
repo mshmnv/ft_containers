@@ -3,9 +3,6 @@
 
 #include <iostream>
 
-//todo
-// ?vector<bool>
-
 namespace ft {
     template <class Type, class Alloc = std::allocator<Type> >
     class vector {
@@ -28,6 +25,10 @@ namespace ft {
         struct enable_if <true, T> { typedef T type; };
 
     public:
+        /////////////////////////////
+        ////     CONSTRUCTORS    ////
+        /////////////////////////////
+
         explicit vector(const allocator_type& alloc = allocator_type());
         explicit vector(size_type n, const value_type& val = value_type(),
                          const allocator_type& alloc = allocator_type());
@@ -35,12 +36,17 @@ namespace ft {
         vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
                 typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
         vector(const vector& x);
+        vector &operator=(vector const &);
+
+        //////////////////////////
+        ////    DESTRUCTOR    ////
+        //////////////////////////
+
         ~vector();
 
-        vector &operator=(vector const &);
-        allocator_type get_allocator() const { return this->_allocatorType; }
-
-        ////    ITERATORS    ////
+        //////////////////////////
+        ////     ITERATORS    ////
+        //////////////////////////
 
         class	const_iterator;
         class	iterator {
@@ -53,8 +59,8 @@ namespace ft {
             iterator(iterator  const &other) { this->_arr = other._arr; }
             iterator& operator++() { this->_arr++; return *this; }
             iterator& operator--() { this->_arr--; return *this; }
-            iterator& operator++(int) { ++(*this); return *this; }
-            iterator& operator--(int) { --(*this); return *this; }
+            iterator operator++(int) { iterator tmp = *this; ++(*this); return tmp; }
+            iterator operator--(int) { iterator tmp = *this; --(*this); return tmp; }
             bool operator!=(iterator const &it) { return this->_arr != it._arr; }
             bool operator==(iterator const &it) { return this->_arr == it._arr; }
             Type operator*() { return *this->_arr; }
@@ -82,8 +88,8 @@ namespace ft {
             reverse_iterator(reverse_iterator const &other) { this->_arr = other._arr; }
             reverse_iterator& operator++() { this->_arr--; return *this; }
             reverse_iterator& operator--() { this->_arr++; return *this; }
-            reverse_iterator& operator++(int) { ++(*this); return *this; }
-            reverse_iterator& operator--(int) { --(*this); return *this; }
+            reverse_iterator operator++(int) { reverse_iterator tmp = *this; ++(*this); return tmp; }
+            reverse_iterator operator--(int) { reverse_iterator tmp = *this; --(*this); return tmp; }
             bool operator!=(reverse_iterator const &it) { return this->_arr != it._arr; }
             Type operator*() { return *this->_arr; }
 			iterator operator-(const iterator other) { this->_arr = this->_arr - other._arr; return *this; }
@@ -109,7 +115,9 @@ namespace ft {
         reverse_iterator rend() { return reverse_iterator(this->_arr - 1); }
         const_reverse_iterator rend() const { return const_reverse_iterator(this->_arr - 1); }
 
-        ////    METHODS    ////
+        /////////////////////////
+        ////     CAPACITY    ////
+        /////////////////////////
 
         size_type size() const;
         size_type max_size() const;
@@ -117,6 +125,10 @@ namespace ft {
         size_type capacity() const;
         bool empty() const;
         void reserve(size_type n);
+
+        ///////////////////////////////
+        ////     ELEMENT ACCESS    ////
+        ///////////////////////////////
 
         reference operator[](size_type n);
 		const_reference operator[](size_type n) const;
@@ -126,6 +138,10 @@ namespace ft {
 		const_reference back() const;
 		reference front();
 		const_reference front() const;
+
+        //////////////////////////
+        ////     MODIFIERS    ////
+        //////////////////////////
 
 		template <class InputIterator>
 				void assign(InputIterator first, InputIterator last, typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
@@ -141,11 +157,33 @@ namespace ft {
 		void swap(vector& x);
 		void clear();
 
-
+        //////////////////////////
+        ////     ALLOCATOR    ////
+        //////////////////////////
+        allocator_type get_allocator() const { return this->_allocatorType; }
 	};
+    /////////////////////////////////////
+    ////     NON-MEMBER FUNCTIONS    ////
+    /////////////////////////////////////
+    template <class T, class Alloc>
+    bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
+    template <class T, class Alloc>
+    bool operator!=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
+    template <class T, class Alloc>
+    bool operator<(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
+    template <class T, class Alloc>
+    bool operator>(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
+    template <class T, class Alloc>
+    bool operator>=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
+    template <class T, class Alloc>
+    bool operator<=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
+    template <class T, class Alloc>
+    void swap(ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y);
 }
 
-////    CONSTRUCTORS    ////
+/////////////////////////////
+////     CONSTRUCTORS    ////
+/////////////////////////////
 
 template <class Type, class Alloc>
 ft::vector<Type, Alloc>::vector(const allocator_type& alloc) :
@@ -173,7 +211,18 @@ ft::vector<Type, Alloc>::vector(const vector& x) {
         *this = x;
 }
 
-////    DESTRUCTOR    ////
+template <class Type, class Alloc>
+ft::vector<Type, Alloc>& ft::vector<Type, Alloc>::operator=(vector const& vector) {
+    this->clear();
+    this->insert(this->begin(), vector.begin(), vector.end());
+    this->_allocatorType = vector._allocatorType;
+    this->_allocator = vector._allocator;
+    return *this;
+}
+
+///////////////////////////
+////     DESTRUCTOR    ////
+///////////////////////////
 
 template <class Type, class Alloc>
 ft::vector<Type, Alloc>::~vector() {
@@ -182,7 +231,9 @@ ft::vector<Type, Alloc>::~vector() {
     this->_allocator.deallocate(_arr, this->_capacity);
 }
 
-////    METHODS    ////
+/////////////////////////
+////     CAPACITY    ////
+/////////////////////////
 
 template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::size_type ft::vector<Type, Alloc>::size() const {
@@ -228,6 +279,20 @@ void ft::vector<Type, Alloc>::reserve(size_type n) {
 	this->_arr = newArr;
 }
 
+///////////////////////////////
+////     ELEMENT ACCESS    ////
+///////////////////////////////
+
+template <class Type, class Alloc>
+typename ft::vector<Type, Alloc>::reference ft::vector<Type, Alloc>::operator[](size_type n) {
+    return this->_arr[n];
+}
+
+template <class Type, class Alloc>
+typename ft::vector<Type, Alloc>::const_reference ft::vector<Type, Alloc>::operator[](size_type n) const {
+    return this->_arr[n];
+}
+
 template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::reference ft::vector<Type, Alloc>::at(size_type n) {
 	if (n >= this->_size)
@@ -262,6 +327,10 @@ template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::const_reference ft::vector<Type, Alloc>::front() const {
 	return this->_arr[0];
 }
+
+//////////////////////////
+////     MODIFIERS    ////
+//////////////////////////
 
 template <class Type, class Alloc>
 template <class InputIterator>
@@ -340,7 +409,6 @@ typename ft::vector<Type, Alloc>::iterator ft::vector<Type, Alloc>::erase(iterat
     return erase(position, position + 1);
 }
 
-// last - is not deleted
 template <class Type, class Alloc>
 typename ft::vector<Type, Alloc>::iterator ft::vector<Type, Alloc>::erase(iterator first, iterator last){
     size_t ind = first._arr - _arr;
@@ -387,33 +455,12 @@ void ft::vector<Type, Alloc>::clear() {
 	erase(this->begin(), this->end());
 }
 
-
-
-////     OVERLOADS    ////
-
-template <class Type, class Alloc>
-ft::vector<Type, Alloc>& ft::vector<Type, Alloc>::operator=(vector const& vector) {
-    this->clear();
-    this->insert(this->begin(), vector.begin(), vector.end());
-    this->_allocatorType = vector._allocatorType;
-    this->_allocator = vector._allocator;
-    return *this;
-}
-
-template <class Type, class Alloc>
-typename ft::vector<Type, Alloc>::reference ft::vector<Type, Alloc>::operator[](size_type n) {
-	return this->_arr[n];
-}
-
-template <class Type, class Alloc>
-typename ft::vector<Type, Alloc>::const_reference ft::vector<Type, Alloc>::operator[](size_type n) const {
-	return this->_arr[n];
-}
-
+/////////////////////////////////////
 ////     NON-MEMBER FUNCTIONS    ////
+/////////////////////////////////////
 
 template <class T, class Alloc>
-bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+bool ft::operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
     if (lhs.size() != rhs.size())
         return false;
     typename ft::vector<T, Alloc>::iterator lit = lhs.begin();
@@ -427,12 +474,12 @@ bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) 
 }
 
 template <class T, class Alloc>
-bool operator!=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+bool ft::operator!=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
     return !(lhs == rhs);
 }
 
 template <class T, class Alloc>
-bool operator<(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+bool ft::operator<(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
     typename ft::vector<T, Alloc>::iterator lit = lhs.begin();
     typename ft::vector<T, Alloc>::iterator lite = lhs.end();
     typename ft::vector<T, Alloc>::iterator rit = rhs.begin();
@@ -444,23 +491,23 @@ bool operator<(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
 }
 
 template <class T, class Alloc>
-bool operator>(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+bool ft::operator>(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
     return !(lhs<rhs);
 }
 
 template <class T, class Alloc>
-bool operator>=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+bool ft::operator>=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
     return !(lhs<rhs);
 
 }
 
 template <class T, class Alloc>
-bool operator<=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+bool ft::operator<=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
     return !(lhs>rhs);
 }
 
 template <class T, class Alloc>
-void swap(ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y) {
+void ft::swap(ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y) {
     x.swap(y);
 }
 
