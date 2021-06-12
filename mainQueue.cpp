@@ -77,5 +77,6 @@ int main() {
     std::cout << "FT:  " << std::boolalpha << "Empty: " << ft_a.empty() << " | Size: " << ft_a.size() << " | Front: " << ft_a.front() << " | Back: " << ft_a.back() << std::endl;
     std::cout << "FT:  " << std::boolalpha << "Empty: " << ft_c.empty() << " | Size: " << ft_c.size() << " | Front: " << ft_c.front() << " | Back: " << ft_c.back() << std::endl;
 
+//    while(1) ;
     return 0;
 }

@@ -37,12 +37,12 @@ namespace ft {
         };
 
         size_type _size;
-        std::allocator<std::pair<const Key,T> > _pairAllocator;
-        allocator_type _allocatorType;
         key_compare _comp;
         value_compare _value_comp;
         Node<Key,T> *_root;
         Node<Key,T> *_leftEmpty;
+        std::allocator<std::pair<const Key,T> > _pairAllocator;
+        allocator_type _allocatorType;
 
     public:
 

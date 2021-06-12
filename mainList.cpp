@@ -1090,8 +1090,7 @@ int main() {
 
     std::list<int> bigList;
     ft::list<int> ft_bigList;
-
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 100000; i++) {
         bigList.push_back(rand() % 1000);
         ft_bigList.push_back(rand() % 1000);
     }
@@ -1102,7 +1101,7 @@ int main() {
     std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
     std::cout << "FT  ";
     startTime = clock();
-//    ft_bigList.sort();
+    ft_bigList.sort();
     endTime = clock();
     std::cout << "Time: " << (endTime - startTime) / CLOCKS_PER_SEC << " s" << std::endl;
 
@@ -1128,6 +1127,6 @@ int main() {
     std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
     std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
 
-//    while (1) ;
+    while (1) ;
     return 0;
 }

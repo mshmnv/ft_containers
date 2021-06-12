@@ -70,7 +70,7 @@ bool operator>=(const ft::queue<T,Container>& lhs, const ft::queue<T,Container>&
 }
 
 template <class T, class Container>
-void swap(ft::queue<T,Container>& x, ft::queue<T,Container>& y) noexcept(noexcept(x.swap(y))) {
+void swap(ft::queue<T,Container>& x, ft::queue<T,Container>& y) {
     x.swap(y);
 }
 

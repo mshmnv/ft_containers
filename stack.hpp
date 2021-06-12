@@ -68,7 +68,7 @@ bool operator>=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>&
 }
 
 template <class T, class Container>
-void swap(ft::stack<T,Container>& x, ft::stack<T,Container>& y) noexcept(noexcept(x.swap(y))) {
+void swap(ft::stack<T,Container>& x, ft::stack<T,Container>& y) {
     x.swap(y);
 }
 

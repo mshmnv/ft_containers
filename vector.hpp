@@ -12,12 +12,12 @@ namespace ft {
         typedef size_t  size_type;
 		typedef value_type& reference;
         typedef const value_type& const_reference;
-        std::allocator<value_type> _allocator;
-        allocator_type  _allocatorType;
 
         Type		*_arr;
         size_type   _size;
         size_type   _capacity;
+        std::allocator<value_type> _allocator;
+        allocator_type  _allocatorType;
 
         template <bool B, class T = void>
         struct enable_if {};
@@ -186,23 +186,23 @@ namespace ft {
 /////////////////////////////
 
 template <class Type, class Alloc>
-ft::vector<Type, Alloc>::vector(const allocator_type& alloc) :
-    _allocatorType(alloc), _size(0), _capacity(0), _arr(NULL) {
+ft::vector<Type, Alloc>::vector(const allocator_type& alloc)
+    : _arr(NULL), _size(0), _capacity(0), _allocatorType(alloc) {
 }
 
 template <class Type, class Alloc>
-ft::vector<Type, Alloc>::vector(size_type n, const value_type& val, const allocator_type& alloc) :
-    _allocatorType(alloc), _size(n), _capacity(n), _arr(NULL) {
+ft::vector<Type, Alloc>::vector(size_type n, const value_type& val, const allocator_type& alloc)
+: _arr(NULL), _size(n), _capacity(n), _allocatorType(alloc)  {
     this->_arr = this->_allocator.allocate(n);
-    for (int i = 0; i < n; i++)
+    for (size_type i = 0; i < n; i++)
     	this->_allocator.construct(&this->_arr[i], val);
 }
 
 template <class Type, class Alloc>
 template <class InputIterator>
 ft::vector<Type, Alloc>::vector(InputIterator first, InputIterator last, const allocator_type& alloc,
-                                typename ft::vector<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) :
-    _allocatorType(alloc), _size(0), _capacity(0), _arr(NULL) {
+                                typename ft::vector<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*)
+                                : _arr(NULL), _size(0), _capacity(0), _allocatorType(alloc) {
 	this->insert(this->begin(), first, last);
 }
 
@@ -226,7 +226,7 @@ ft::vector<Type, Alloc>& ft::vector<Type, Alloc>::operator=(vector const& vector
 
 template <class Type, class Alloc>
 ft::vector<Type, Alloc>::~vector() {
-    for (int i = 0; i < this->_size; i++)
+    for (size_type i = 0; i < this->_size; i++)
         this->_allocator.destroy(&_arr[i]);
     this->_allocator.deallocate(_arr, this->_capacity);
 }
@@ -270,7 +270,7 @@ void ft::vector<Type, Alloc>::reserve(size_type n) {
 	if (n > this->max_size())
 		throw std::length_error("vector size limit");
 	Type *newArr = this->_allocator.allocate(n);
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		this->_allocator.construct(&newArr[i], this->_arr[i]);
 		this->_allocator.destroy(&this->_arr[i]);
 	}
@@ -373,11 +373,11 @@ void ft::vector<Type, Alloc>::insert(iterator position, size_type n, const value
             reserve(this->_capacity * 2);
     else
         reserve(this->_size + n);
-    for (int j = this->_size + n - 1; j > index; j--) {
+    for (size_type j = this->_size + n - 1; j > index; j--) {
 		this->_allocator.construct(&this->_arr[j], this->_arr[j - n]);
 		this->_allocator.destroy(&this->_arr[j - n]);
 	}
-	for (int i = index; i < index + n; i++)
+	for (size_type i = index; i < index + n; i++)
 		this->_allocator.construct(&this->_arr[i], val);
 	this->_size += n;
 }
@@ -386,7 +386,7 @@ template <class Type, class Alloc>
 template <class InputIterator>
 void ft::vector<Type, Alloc>::insert(iterator position, InputIterator first, InputIterator last,
 									 typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
-	int n = 0;
+    size_type n = 0;
 	for (iterator tmp = first; tmp != last; tmp++)
 		n++;
 	size_type index = position._arr - _arr;
@@ -395,11 +395,11 @@ void ft::vector<Type, Alloc>::insert(iterator position, InputIterator first, Inp
             reserve(this->_capacity * 2);
     else
 	    reserve(this->_size + n);
-	for (int j = this->_size + n - 1; j > index; j--) {
+	for (size_type j = this->_size + n - 1; j > index; j--) {
 		this->_allocator.construct(&this->_arr[j], this->_arr[j - n]);
 		this->_allocator.destroy(&this->_arr[j - n]);
 	}
-	for (int i = index; first != last; first++, i++)
+	for (size_type i = index; first != last; first++, i++)
 		this->_allocator.construct(&this->_arr[i], *first);
 	this->_size += n;
 }

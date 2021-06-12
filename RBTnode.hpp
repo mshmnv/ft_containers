@@ -13,25 +13,25 @@ private:
     typedef std::pair<const Key,T> value_type;
     typedef Compare key_compare;
     typedef Alloc allocator_type;
-    key_compare _comp;
 
 public:
-    bool isEmpty;
     int color;
     std::pair<const Key, T> *pair;
     Node* left;
     Node* right;
     Node* parent;
+    key_compare _comp;
     std::allocator<std::pair<const Key,T> > _pairAllocator;
+    bool isEmpty;
 
     Node(const value_type& val, Node<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc), isEmpty(false) {
+    : color(RED), left(NULL), right(NULL), parent(parent), _comp(comp), _pairAllocator(alloc), isEmpty(false) {
         this->pair = this->_pairAllocator.allocate(1);
         this->_pairAllocator.construct(pair, val);
     }
 
     Node(Node<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-    : color(RED), parent(parent), left(NULL), right(NULL), _comp(comp), _pairAllocator(alloc), pair(NULL), isEmpty(true) {
+    : color(RED), pair(NULL), left(NULL), right(NULL), parent(parent), _comp(comp), _pairAllocator(alloc), isEmpty(true) {
     }
     ~Node() { this->_pairAllocator.deallocate(this->pair, 1); }
 };
@@ -57,6 +57,8 @@ Node<Key,T> *rotateLeft(Node<Key,T> *node) {
     node->parent = child;
 
     node->right = childLeft;
+    if (childLeft)
+        childLeft->parent = node;
     return child;
 }
 
@@ -74,6 +76,8 @@ Node<Key,T> *rotateRight(Node<Key,T> *node) {
     node->parent = child;
 
     node->left = childRight;
+    if (childRight)
+        childRight->parent = node;
     return child;
 }
 
@@ -99,6 +103,11 @@ Node<Key,T> *insertNode(Node<Key,T> *node, Node<Key,T> *parent, const std::pair<
         newNode->left = node;
         node->parent = newNode;
         node->right = NULL;
+        swapColors(newNode->color, node->color);
+        if ((node->left && node->left->color == RED) && ( node->left->left && node->left->left->color == RED)) {
+            node = rotateRight(node);
+            swapColors(node->color, node->right->color);
+        }
         return newNode;
     }
     else if (!comp(val.first, node->pair->first))

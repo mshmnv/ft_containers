@@ -31,7 +31,7 @@ namespace ft {
             ////     CONSTRUCTORS    ////
             /////////////////////////////
 			explicit list(const allocator_type& = allocator_type());
-			explicit list(int, const value_type& = value_type(), const allocator_type& = allocator_type());
+			explicit list(size_type, const value_type& = value_type(), const allocator_type& = allocator_type());
 			template <class InputIterator>
 				list(InputIterator first, InputIterator last, const allocator_type& = allocator_type(),
                      typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0);
@@ -207,20 +207,20 @@ ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc)
 }
 
 template <class Type, class Alloc>
-ft::list<Type, Alloc>::list(int count, const Type& data, const allocator_type& alloc) : _allocatorType(alloc), _size(0) {
+ft::list<Type, Alloc>::list(size_type count, const Type& data, const allocator_type& alloc) : _allocatorType(alloc), _size(0) {
 	this->_empty = this->_nodeAllocator.allocate(1);
     this->_nodeAllocator.construct(this->_empty, value_type());
     this->_head = this->_empty;
 	this->_tail = this->_empty;
-	for (int i = 0; i < count; i++)
+	for (size_type i = 0; i < count; i++)
 		this->push_back(data);
 }
 
 template <class Type, class Alloc>
 template <class InputIterator>
 ft::list<Type, Alloc>::list(InputIterator first, InputIterator last, const allocator_type& alloc,
-	typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*) {
-	this->_size = 0;
+	typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type*)
+	: _allocatorType(alloc), _size(0) {
 	this->_empty = this->_nodeAllocator.allocate(1);
     this->_nodeAllocator.construct(this->_empty, value_type());
     this->_head = this->_empty;
@@ -255,7 +255,7 @@ ft::list<Type, Alloc>& ft::list<Type, Alloc>::operator=(list const& list) {
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::~list() {
 	Node<Type>* tmp;
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		tmp = this->_head;
 		this->_head = this->_head->next;
 		this->_nodeAllocator.deallocate(tmp, 1);
@@ -312,9 +312,9 @@ typename ft::list<Type, Alloc>::const_reference ft::list<Type, Alloc>::front() c
 //////////////////////////
 
 template <class Type, class Alloc>
-void ft::list<Type, Alloc>::assign(size_t count, Type const& value) {
+void ft::list<Type, Alloc>::assign(size_type count, Type const& value) {
 	this->clear();
-	for (int i = 0; i < count; i++) {
+	for (size_type i = 0; i < count; i++) {
 		push_back(value);
 	}
 }
@@ -395,8 +395,8 @@ typename ft::list<Type, Alloc>::iterator ft::list<Type, Alloc>::insert(iterator 
 }
 
 template <class Type, class Alloc>
-void	ft::list<Type, Alloc>::insert(iterator position, size_t n, Type const& data) {
-	for (int i = 0; i < n; i++) {
+void	ft::list<Type, Alloc>::insert(iterator position, size_type n, Type const& data) {
+	for (size_type i = 0; i < n; i++) {
 		position = this->insert(position, data);
 	}
 }
@@ -465,7 +465,7 @@ template <class Type, class Alloc>
 void ft::list<Type, Alloc>::resize(size_t n, Type data) {
 	Node<Type> *tmpNode = this->_head;
 
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		if (i == n) {
 			Node<Type>* tmp;
 			this->_tail = tmpNode->prev;
@@ -490,7 +490,7 @@ void ft::list<Type, Alloc>::clear() {
 	if (this->_size != 0) {
 		this->_size = 0;
 		Node<Type>* tmp;
-		for (int i = 0; i < this->_size; i++) {
+		for (size_type i = 0; i < this->_size; i++) {
 			tmp = this->_head;
 			this->_head = this->_head->next;
             this->_nodeAllocator.deallocate(tmp, 1);
@@ -561,7 +561,7 @@ template <class Type, class Alloc>
 void ft::list<Type, Alloc>::splice(iterator position, list& x, iterator first, iterator last) {
 	if (first == last)
 		return ;
-	int len = 0;
+	size_t len = 0;
 	for (iterator tmpFirst = first; tmpFirst != last; tmpFirst++)
 		len++;
 	if (position == this->begin())
@@ -740,7 +740,7 @@ void	ft::list<Type, Alloc>::reverse() {
 	this->_head = tmpTail;
 	this->_tail = tmpHead;
 
-	for (int i = 0; i < this->_size / 2 - 1; i++) {
+	for (size_t i = 0; i < this->_size / 2 - 1; i++) {
 		tmpHead->next->prev = tmpTail;
 		tmpTail->prev->next = tmpHead;
 		tmpNext = tmpHead->next;
