@@ -1,4 +1,4 @@
-#include "vector.hpp"
+#include "../vector.hpp"
 #include <vector>
 
 template<class T>
@@ -18,7 +18,7 @@ void printVector(ft::vector<T> &vect) {
 }
 
 
-int main(){
+void test_vector(){
     std::vector<int> vect;
     std::vector<int> vect0(10, 9);
     std::vector<int> vect1(vect0.begin(), vect0.end());
@@ -298,8 +298,5 @@ int main(){
     std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
     std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
 
-//	while(1)
-//	    ;
-
-    return 0;
+//    while (1) ;
 }

@@ -1,9 +1,9 @@
-#include "queue.hpp"
+#include "../queue.hpp"
 #include <queue>
 #include <deque>
 
 
-int main() {
+void test_queue() {
     std::queue<int> queue1;
     ft::queue<int> ft_queue1;
 
@@ -78,5 +78,4 @@ int main() {
     std::cout << "FT:  " << std::boolalpha << "Empty: " << ft_c.empty() << " | Size: " << ft_c.size() << " | Front: " << ft_c.front() << " | Back: " << ft_c.back() << std::endl;
 
 //    while(1) ;
-    return 0;
 }

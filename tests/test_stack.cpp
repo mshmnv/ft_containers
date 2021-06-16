@@ -1,9 +1,9 @@
-#include "stack.hpp"
+#include "../stack.hpp"
 #include <stack>
 #include <deque>
 
 
-int main() {
+void test_stack() {
 
     std::stack<int> stack1;
     ft::stack<int> ft_stack1;
@@ -73,5 +73,4 @@ int main() {
     std::cout << "FT:  " << std::boolalpha << "Empty: " << ft_c.empty() << " | Size: " << ft_c.size() << " | Top: " << ft_c.top() << std::endl;
 
 //    while(1) ;
-    return 0;
 }

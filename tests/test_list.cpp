@@ -1,4 +1,4 @@
-#include "list.hpp"
+#include "../list.hpp"
 #include <list>
 #include <cmath>
 #include <time.h>
@@ -25,7 +25,7 @@ bool compare_nocase(const std::string& first, const std::string& second) {
     return (first.length() < second.length());
 }
 
-int main() {
+void test_list() {
 	std::list<int>::iterator ite;
 	std::list<int>::iterator it;
 	ft::list<int>::iterator ft_ite;
@@ -106,7 +106,6 @@ int main() {
 
 
 	std::cout << std::endl << " -- MAX_SIZE -- " << std::endl << std::endl;
-	std::cout << "STD: " << std::boolalpha << stdList3.max_size() << " | " << stdList1.max_size() << std::endl;
 	std::cout << "FT:  " << std::boolalpha << list3.max_size() << " | " << list1.max_size() << std::endl << std::endl;
 
 
@@ -216,7 +215,7 @@ int main() {
 	for (ft_ite = list3.end(); ft_it != ft_ite; ft_it++)
 		std::cout << *ft_it << " ";
 	std::cout << std::endl;
-	
+
 
 
 	std::cout << std::endl << " -- ITERATORS -- " << std::endl << std::endl;
@@ -1127,6 +1126,4 @@ int main() {
     std::cout << std::boolalpha << "STD " << (a<=b) << "\tFT " << (ft_a<=ft_b) << std::endl;
     std::cout << std::boolalpha << "STD " << (a>=b) << "\tFT " << (ft_a>=ft_b) << std::endl;
 
-    while (1) ;
-    return 0;
 }

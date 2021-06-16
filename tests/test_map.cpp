@@ -1,5 +1,5 @@
 
-#include "map.hpp"
+#include "../map.hpp"
 #include <map>
 
 template < class Key, class T>
@@ -25,7 +25,7 @@ void printMap(ft::map<Key, T> map) {
 }
 
 
-int main() {
+void test_map() {
     std::cout << std::endl << std::endl << " --- INSERT ---" << std::endl;
     std::cout << " --- ITERATORS ---" << std::endl;
     std::map<char, int> map1;
@@ -245,6 +245,8 @@ int main() {
 
     std::cout << std::endl << std::endl << " --- just a big map ---" << std::endl;
     std::map<char, int> map5;
+    map5.insert(std::pair<char,int>('a',1));
+    map5.insert(std::pair<char,int>('y',25));
     map5.insert(std::pair<char,int>('q',17));
     map5.insert(std::pair<char,int>('l',12));
     map5.insert(std::pair<char,int>('e',5));
@@ -262,7 +264,6 @@ int main() {
     map5.insert(std::pair<char,int>('f',6));
     map5.insert(std::pair<char,int>('d',4));
     map5.insert(std::pair<char,int>('b',2));
-    map5.insert(std::pair<char,int>('a',1));
     map5.insert(std::pair<char,int>('h',8));
     map5.insert(std::pair<char,int>('i',9));
     map5.insert(std::pair<char,int>('j',10));
@@ -271,11 +272,12 @@ int main() {
     map5.insert(std::pair<char,int>('o',15));
     map5.insert(std::pair<char,int>('p',16));
     map5.insert(std::pair<char,int>('r',18));
-    map5.insert(std::pair<char,int>('y',25));
 
     printMap(map5);
 
     ft::map<char, int> ft_map5;
+    ft_map5.insert(std::pair<char,int>('a',1));
+    ft_map5.insert(std::pair<char,int>('y',25));
     ft_map5.insert(std::pair<char,int>('q',17));
     ft_map5.insert(std::pair<char,int>('l',12));
     ft_map5.insert(std::pair<char,int>('e',5));
@@ -283,8 +285,8 @@ int main() {
     ft_map5.insert(std::pair<char,int>('s',19));
     ft_map5.insert(std::pair<char,int>('n',14));
     ft_map5.insert(std::pair<char,int>('t',20));
-    ft_map5.insert(std::pair<char,int>('u',21));
     ft_map5.insert(std::pair<char,int>('v',22));
+    ft_map5.insert(std::pair<char,int>('u',21));
     ft_map5.insert(std::pair<char,int>('w',23));
     ft_map5.insert(std::pair<char,int>('x',24));
     ft_map5.insert(std::pair<char,int>('z',26));
@@ -293,7 +295,6 @@ int main() {
     ft_map5.insert(std::pair<char,int>('f',6));
     ft_map5.insert(std::pair<char,int>('d',4));
     ft_map5.insert(std::pair<char,int>('b',2));
-    ft_map5.insert(std::pair<char,int>('a',1));
     ft_map5.insert(std::pair<char,int>('h',8));
     ft_map5.insert(std::pair<char,int>('i',9));
     ft_map5.insert(std::pair<char,int>('j',10));
@@ -302,10 +303,9 @@ int main() {
     ft_map5.insert(std::pair<char,int>('o',15));
     ft_map5.insert(std::pair<char,int>('p',16));
     ft_map5.insert(std::pair<char,int>('r',18));
-    ft_map5.insert(std::pair<char,int>('y',25));
+
 
     printMap(ft_map5);
 
 //    while (1) ;
-    return 0;
 }
