@@ -204,6 +204,8 @@ ft::list<Type, Alloc>::list(const allocator_type& alloc) : _allocatorType(alloc)
 	this->_head->prev = this->_empty;
 	this->_tail->prev = this->_empty;
 	this->_tail->next = this->_empty;
+	this->_empty->prev = this->_tail;
+    this->_empty->next = this->_head;
 }
 
 template <class Type, class Alloc>
@@ -212,6 +214,12 @@ ft::list<Type, Alloc>::list(size_type count, const Type& data, const allocator_t
     this->_nodeAllocator.construct(this->_empty, value_type());
     this->_head = this->_empty;
 	this->_tail = this->_empty;
+    this->_head->next = this->_empty;
+    this->_head->prev = this->_empty;
+    this->_tail->prev = this->_empty;
+    this->_tail->next = this->_empty;
+    this->_empty->prev = this->_tail;
+    this->_empty->next = this->_head;
 	for (size_type i = 0; i < count; i++)
 		this->push_back(data);
 }
@@ -229,6 +237,8 @@ ft::list<Type, Alloc>::list(InputIterator first, InputIterator last, const alloc
 	this->_head->prev = this->_empty;
 	this->_tail->prev = this->_empty;
 	this->_tail->next = this->_empty;
+    this->_empty->prev = this->_tail;
+    this->_empty->next = this->_head;
 	for (; first != last; first++) {
 		this->push_back(*first);
 	}
@@ -254,14 +264,8 @@ ft::list<Type, Alloc>& ft::list<Type, Alloc>::operator=(list const& list) {
 
 template <class Type, class Alloc>
 ft::list<Type, Alloc>::~list() {
-	Node<Type>* tmp;
-	for (size_type i = 0; i < this->_size; i++) {
-		tmp = this->_head;
-		this->_head = this->_head->next;
-		this->_nodeAllocator.deallocate(tmp, 1);
-	}
-    if (this->empty())
-        this->_nodeAllocator.deallocate(this->_empty, 1);
+    clear();
+	this->_nodeAllocator.deallocate(this->_empty, 1);
 }
 
 /////////////////////////
@@ -332,14 +336,7 @@ void ft::list<Type, Alloc>::assign(InputIterator first, InputIterator last,
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::push_front(Type const &data) {
-	this->_size++;
-	Node<Type>* tmp = this->_nodeAllocator.allocate(1);
-    this->_nodeAllocator.construct(tmp, data);
-	this->_head->prev = tmp;
-	tmp->next = this->_head;
-	this->_empty->next = tmp;
-	tmp->prev = this->_empty;
-	this->_head = tmp;
+    insert(this->begin(), data);
 }
 
 template <class Type, class Alloc>
@@ -355,16 +352,7 @@ void ft::list<Type, Alloc>::pop_front() {
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::push_back(Type const &data) {
-	this->_size++;
-    Node<Type>* tmp = this->_nodeAllocator.allocate(1);
-    this->_nodeAllocator.construct(tmp, data);
-	if (this->_size == 1)
-		this->_head = tmp;
-	this->_tail->next = tmp;
-	tmp->prev = this->_tail;
-	this->_empty->prev = tmp;
-	tmp->next = this->_empty;
-	this->_tail = tmp;
+    insert(this->end(), data);
 }
 
 template <class Type, class Alloc>
@@ -413,7 +401,6 @@ typename ft::list<Type, Alloc>::enable_if <!std::numeric_limits<InputIterator>::
 
 template <class Type, class Alloc>
 typename ft::list<Type, Alloc>::iterator ft::list<Type, Alloc>::erase(iterator position) {
-
 	if (position == this->end())
 		return this->end();
 	this->_size--;
@@ -487,23 +474,7 @@ void ft::list<Type, Alloc>::resize(size_t n, Type data) {
 
 template <class Type, class Alloc>
 void ft::list<Type, Alloc>::clear() {
-	if (this->_size != 0) {
-		this->_size = 0;
-		Node<Type>* tmp;
-		for (size_type i = 0; i < this->_size; i++) {
-			tmp = this->_head;
-			this->_head = this->_head->next;
-            this->_nodeAllocator.deallocate(tmp, 1);
-		}
-		this->_empty = this->_nodeAllocator.allocate(1);
-        this->_nodeAllocator.construct(this->_empty, value_type());
-		this->_head = this->_empty;
-		this->_tail = this->_empty;
-		this->_head->next = this->_empty;
-		this->_head->prev = this->_empty;
-		this->_tail->prev = this->_empty;
-		this->_tail->next = this->_empty;
-	}
+    erase(this->begin(), this->end());
 }
 
 ///////////////////////////

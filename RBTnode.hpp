@@ -8,7 +8,7 @@
 #define RED 1
 
 template<class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key,T> > >
-class Node {
+class RBTnode {
 private:
     typedef std::pair<const Key,T> value_type;
     typedef Compare key_compare;
@@ -17,23 +17,23 @@ private:
 public:
     int color;
     std::pair<const Key, T> *pair;
-    Node* left;
-    Node* right;
-    Node* parent;
+    RBTnode* left;
+    RBTnode* right;
+    RBTnode* parent;
     key_compare _comp;
     std::allocator<std::pair<const Key,T> > _pairAllocator;
     bool isEmpty;
 
-    Node(const value_type& val, Node<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+    RBTnode(const value_type& val, RBTnode<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
     : color(RED), left(NULL), right(NULL), parent(parent), _comp(comp), _pairAllocator(alloc), isEmpty(false) {
         this->pair = this->_pairAllocator.allocate(1);
         this->_pairAllocator.construct(pair, val);
     }
 
-    Node(Node<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+    RBTnode(RBTnode<Key,T> *parent, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
     : color(RED), pair(NULL), left(NULL), right(NULL), parent(parent), _comp(comp), _pairAllocator(alloc), isEmpty(true) {
     }
-    ~Node() { this->_pairAllocator.deallocate(this->pair, 1); }
+    ~RBTnode() { this->_pairAllocator.deallocate(this->pair, 1); }
 };
 
 
@@ -44,9 +44,9 @@ void swapColors(int& color1, int& color2) {
 }
 
 template<class Key, class T>
-Node<Key,T> *rotateLeft(Node<Key,T> *node) {
-    Node<Key,T> *child = node->right;
-    Node<Key,T> *childLeft = child->left;
+RBTnode<Key,T> *rotateLeft(RBTnode<Key,T> *node) {
+    RBTnode<Key,T> *child = node->right;
+    RBTnode<Key,T> *childLeft = child->left;
     child->left = node;
 
     child->parent = node->parent;
@@ -63,9 +63,9 @@ Node<Key,T> *rotateLeft(Node<Key,T> *node) {
 }
 
 template<class Key, class T>
-Node<Key,T> *rotateRight(Node<Key,T> *node) {
-    Node<Key,T> *child = node->left;
-    Node<Key,T> *childRight = child->right;
+RBTnode<Key,T> *rotateRight(RBTnode<Key,T> *node) {
+    RBTnode<Key,T> *child = node->left;
+    RBTnode<Key,T> *childRight = child->right;
     child->right = node;
 
     child->parent = node->parent;
@@ -82,11 +82,11 @@ Node<Key,T> *rotateRight(Node<Key,T> *node) {
 }
 
 template<class Key, class T, class Compare, class Alloc>
-Node<Key,T> *insertNode(Node<Key,T> *node, Node<Key,T> *parent, const std::pair<const Key,T>& val, Compare comp, Alloc pairAlloc) {
+RBTnode<Key,T> *insertNode(RBTnode<Key,T> *node, RBTnode<Key,T> *parent, const std::pair<const Key,T>& val, Compare comp, Alloc pairAlloc) {
     if (node == NULL)
-        return new Node<Key,T>(val, parent, comp, pairAlloc);
+        return new RBTnode<Key,T>(val, parent, comp, pairAlloc);
     if (comp(val.first, node->pair->first) && (node->left && node->left->isEmpty)) {
-        Node<Key,T> *newNode = new Node<Key,T>(val, NULL, comp, pairAlloc);
+        RBTnode<Key,T> *newNode = new RBTnode<Key,T>(val, NULL, comp, pairAlloc);
         newNode->left = node->left;
         node->left->parent = newNode;
         newNode->parent = node;
@@ -97,7 +97,7 @@ Node<Key,T> *insertNode(Node<Key,T> *node, Node<Key,T> *parent, const std::pair<
         node->left = insertNode(node->left, node, val, comp, pairAlloc);
     // if value is bigger but there is emptyNode on the right
     else if (!comp(val.first, node->pair->first) && (node->right && node->right->isEmpty)) {
-        Node<Key,T> *newNode = new Node<Key,T>(val, NULL, comp, pairAlloc);
+        RBTnode<Key,T> *newNode = new RBTnode<Key,T>(val, NULL, comp, pairAlloc);
         newNode->right = node->right;
         node->right->parent = newNode;
         newNode->left = node;
@@ -137,8 +137,8 @@ Node<Key,T> *insertNode(Node<Key,T> *node, Node<Key,T> *parent, const std::pair<
 }
 
 template<class Key, class T>
-void deleteNode(Node<Key,T> *node) {
-    Node<Key,T> *parent = node->parent;
+void deleteNode(RBTnode<Key,T> *node) {
+    RBTnode<Key,T> *parent = node->parent;
     if (!node->left && !node->right) {
         if (parent->right == node)
             parent->right = NULL;
@@ -160,7 +160,7 @@ void deleteNode(Node<Key,T> *node) {
         node->left->parent = parent;
     }
     else {
-        Node<Key,T> *next = node;
+        RBTnode<Key,T> *next = node;
         if (next->right && !next->right->isEmpty) {
             next = next->right;
             while (next->left)
@@ -193,7 +193,7 @@ void deleteNode(Node<Key,T> *node) {
 
 
 template<class Key, class T>
-void inorderPrinting(Node<Key,T> *node)
+void inorderPrinting(RBTnode<Key,T> *node)
 {
     if (node == NULL || node->isEmpty)
         return ;

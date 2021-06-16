@@ -39,8 +39,8 @@ namespace ft {
         size_type _size;
         key_compare _comp;
         value_compare _value_comp;
-        Node<Key,T> *_root;
-        Node<Key,T> *_leftEmpty;
+        RBTnode<Key,T> *_root;
+        RBTnode<Key,T> *_leftEmpty;
         std::allocator<std::pair<const Key,T> > _pairAllocator;
         allocator_type _allocatorType;
 
@@ -51,11 +51,11 @@ namespace ft {
         ////////////////////////////
         explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
         : _size(0), _comp(comp), _value_comp(comp), _pairAllocator(alloc) {
-            this->_root = new Node<Key, T>(NULL, comp, alloc);
-            this->_root->right = new Node<Key,T>(this->_root, comp, alloc);
+            this->_root = new RBTnode<Key, T>(NULL, comp, alloc);
+            this->_root->right = new RBTnode<Key,T>(this->_root, comp, alloc);
             this->_root->right->color = BLACK;
 
-            this->_root->left = new Node<Key,T>(this->_root, comp, alloc);
+            this->_root->left = new RBTnode<Key,T>(this->_root, comp, alloc);
             this->_root->left->color = BLACK;
             this->_leftEmpty = this->_root->left;
         }
@@ -65,20 +65,20 @@ namespace ft {
                 const allocator_type& alloc = allocator_type(),
                 typename enable_if <!std::numeric_limits<InputIterator>::is_specialized>::type* = 0)
                 : _size(0), _comp(comp), _value_comp(comp), _pairAllocator(alloc) {
-            this->_root = new Node<Key, T>(NULL, comp, alloc);
-            this->_root->right = new Node<Key,T>(this->_root, comp, alloc);
+            this->_root = new RBTnode<Key, T>(NULL, comp, alloc);
+            this->_root->right = new RBTnode<Key,T>(this->_root, comp, alloc);
             this->_root->right->color = BLACK;
-            this->_root->left = new Node<Key,T>(this->_root, comp, alloc);
+            this->_root->left = new RBTnode<Key,T>(this->_root, comp, alloc);
             this->_root->left->color = BLACK;
             this->_leftEmpty = this->_root->left;
             insert(first, last);
         }
 
         map(const map& x) : _size(0), _comp(x._comp), _value_comp(x._value_comp), _pairAllocator(x._pairAllocator) {
-            this->_root = new Node<Key, T>(NULL, _comp, _pairAllocator);
-            this->_root->right = new Node<Key,T>(this->_root, _comp, _pairAllocator);
+            this->_root = new RBTnode<Key, T>(NULL, _comp, _pairAllocator);
+            this->_root->right = new RBTnode<Key,T>(this->_root, _comp, _pairAllocator);
             this->_root->right->color = BLACK;
-            this->_root->left = new Node<Key,T>(this->_root, _comp, _pairAllocator);
+            this->_root->left = new RBTnode<Key,T>(this->_root, _comp, _pairAllocator);
             this->_root->left->color = BLACK;
             this->_leftEmpty = this->_root->left;
             insert(x.begin(), x.end());
@@ -109,11 +109,11 @@ namespace ft {
         /////////////////////////
         class iterator {
         protected:
-            Node<Key, T> *_node;
+            RBTnode<Key, T> *_node;
             friend class map;
         public:
             iterator() : _node(NULL) {}
-            iterator(Node<Key, T> *node) : _node(node) {}
+            iterator(RBTnode<Key, T> *node) : _node(node) {}
             iterator(iterator const& other) : _node(other._node) {}
             ~iterator() { }
             iterator& operator++() {
@@ -163,7 +163,7 @@ namespace ft {
         class const_iterator : public iterator {
         public:
             const_iterator() : iterator() {}
-            const_iterator(Node<Key,T> *other) : iterator(other) {}
+            const_iterator(RBTnode<Key,T> *other) : iterator(other) {}
             const_iterator(iterator const& other) : iterator(other._node) {}
             const_iterator& operator=(iterator &other) { this->_node = other._node; return *this; }
             ~const_iterator() {}
@@ -171,11 +171,11 @@ namespace ft {
 
         class reverse_iterator {
         protected:
-            Node<Key, T> *_node;
+            RBTnode<Key, T> *_node;
             friend class map;
         public:
             reverse_iterator() : _node(NULL) {}
-            reverse_iterator(Node<Key, T> *node) : _node(node) {}
+            reverse_iterator(RBTnode<Key, T> *node) : _node(node) {}
             reverse_iterator(reverse_iterator const& other) : _node(other._node) {}
             ~reverse_iterator() { }
             reverse_iterator& operator++() {
@@ -224,7 +224,7 @@ namespace ft {
         class const_reverse_iterator : public reverse_iterator {
         public:
             const_reverse_iterator() : reverse_iterator() {}
-            const_reverse_iterator(Node<Key,T> *other) : reverse_iterator(other) {}
+            const_reverse_iterator(RBTnode<Key,T> *other) : reverse_iterator(other) {}
             const_reverse_iterator(reverse_iterator const& other) : reverse_iterator(other._node) {}
             const_reverse_iterator& operator=(reverse_iterator &other) { this->_node = other._node; return *this; }
             ~const_reverse_iterator() {}
@@ -233,7 +233,7 @@ namespace ft {
         iterator begin() {
             if (this->_size == 0)
                 return iterator(this->_root->right);
-            Node<Key,T> *tmp = this->_root;
+            RBTnode<Key,T> *tmp = this->_root;
             while (tmp) {
                 if (tmp->left && !tmp->left->isEmpty)
                     tmp = tmp->left;
@@ -246,7 +246,7 @@ namespace ft {
         const_iterator begin() const {
             if (this->_size == 0)
                 return const_iterator(this->_root->right);
-            Node<Key,T> *tmp = this->_root;
+            RBTnode<Key,T> *tmp = this->_root;
             while (tmp) {
                 if (tmp->left && !tmp->left->isEmpty)
                     tmp = tmp->left;
@@ -342,8 +342,8 @@ namespace ft {
             allocator_type atTmp = this->_allocatorType;
             key_compare kCompTmp = this->_comp;
             value_compare vCompTmp = this->_value_comp;
-            Node<Key,T> *rootTmp = this->_root;
-            Node<Key,T> *leftTmp = this->_leftEmpty;
+            RBTnode<Key,T> *rootTmp = this->_root;
+            RBTnode<Key,T> *leftTmp = this->_leftEmpty;
 
             this->_size = x._size;
             this->_pairAllocator = x._pairAllocator;
@@ -383,7 +383,7 @@ namespace ft {
 
         iterator find(const key_type& k) {
             if (this->_size) {
-                Node<Key,T> *tmpNode = this->_root;
+                RBTnode<Key,T> *tmpNode = this->_root;
                 while (tmpNode != NULL && !tmpNode->isEmpty) {
                     if (_comp(k, tmpNode->pair->first))
                         tmpNode = tmpNode->left;
@@ -397,7 +397,7 @@ namespace ft {
         }
 
         const_iterator find(const key_type& k) const {
-            Node<Key,T> *tmpNode = this->_root;
+            RBTnode<Key,T> *tmpNode = this->_root;
             while (tmpNode != NULL) {
                 if (_comp(k, tmpNode->pair->first))
                     tmpNode = tmpNode->left;
