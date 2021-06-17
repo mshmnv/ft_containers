@@ -1,4 +1,4 @@
-.PHONY: all clean fclean re vector list stack queue map
+.PHONY: all clean fclean re test
 
 NAME		= containers
 
@@ -31,3 +31,6 @@ fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all
+
+test: all
+	./containers

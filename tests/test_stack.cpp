@@ -71,6 +71,4 @@ void test_stack() {
     swap(ft_a, ft_c);
     std::cout << "FT:  " << std::boolalpha << "Empty: " << ft_a.empty() << " | Size: " << ft_a.size() << " | Top: " << ft_a.top() << std::endl;
     std::cout << "FT:  " << std::boolalpha << "Empty: " << ft_c.empty() << " | Size: " << ft_c.size() << " | Top: " << ft_c.top() << std::endl;
-
-//    while(1) ;
 }

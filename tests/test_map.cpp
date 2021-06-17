@@ -304,8 +304,5 @@ void test_map() {
     ft_map5.insert(std::pair<char,int>('p',16));
     ft_map5.insert(std::pair<char,int>('r',18));
 
-
     printMap(ft_map5);
-
-//    while (1) ;
 }
